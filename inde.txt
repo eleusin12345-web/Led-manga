@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MangaWeb - Твоя Манга</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+body {
+background-color: #0f172a; /* Темно-синий фон */
+color: #f8fafc;
+font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+-webkit-tap-highlight-color: transparent;
+}
+
+/* Плавные карточки */
+.manga-card { transition: all 0.3s ease; }
+.manga-card:hover { transform: translateY(-6px); box-shadow: 0 10px 25px -5px rgba(168, 85, 247, 0.4); }
+
+/* Скроллбар */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #1e293b; }
+::-webkit-scrollbar-thumb { background: #64748b; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+/* Темы читалки */
+.theme-dark { background-color: #020617; }
+.theme-gray { background-color: #1e293b; }
+.theme-light { background-color: #f1f5f9; color: #0f172a; }
+
+/* Уведомления (Toast) */
+#toast {
+transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s;
+transform: translateY(-100%);
+opacity: 0;
+}
+#toast.show {
+transform: translateY(0);
+opacity: 1;
+}
+</style>
+</head>
+<body class="antialiased overflow-x-hidden">
+
+<!-- ВСПЛЫВАЮЩЕЕ УВЕДОМЛЕНИЕ -->
+<div id="toast" class="fixed top-4 left-1/2 transform -translate-x-1/2 z-[100] bg-green-500 text-white px-6 py-3 rounded-full shadow-lg font-bold flex items-center gap-2 pointer-events-none">
+<i class="fa-solid fa-check-circle"></i> <span id="toast-msg">Успешно!</span>
+</div>
+
+<!-- ВЕРХНЯЯ НАВИГАЦИЯ -->
+<nav id="main-nav" class="fixed w-full z-40 bg-slate-900/90 backdrop-blur-lg border-b border-slate-800 shadow-sm">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex items-center justify-between h-16">
+<!-- Логотип -->
+<div class="flex items-center gap-2 cursor-pointer" onclick="goHome()">
+<div class="bg-purple-600/20 p-2 rounded-lg">
+<i class="fa-solid fa-book-open text-purple-500 text-xl"></i>
+</div>
+<span class="font-black text-xl tracking-tight hidden sm:block">Manga<span class="text-purple-500">Web</span></span>
+</div>
+
+<!-- Поиск -->
+<div class="flex-1 max-w-md mx-4 relative">
+<i class="fa-solid fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400"></i>
+<input type="text" id="search-input" oninput="searchManga()" class="w-full bg-slate-800 border border-slate-700 text-white rounded-full py-2 pl-10 pr-4 focus:outline-none focus:border-purple-500 transition-colors" placeholder="Найти мангу...">
+</div>
+
+<!-- Кнопка Добавить Мангу -->
+<button onclick="openModal('modal-add-manga')" class="bg-purple-600 hover:bg-purple-500 text-white text-sm font-bold py-2 px-4 rounded-full transition-all shadow-lg shadow-purple-600/20 flex items-center gap-2 whitespace-nowrap">
+<i class="fa-solid fa-plus"></i> <span class="hidden sm:inline">Новая манга</span>
+</button>
+</div>
+</div>
+</nav>
+
+<!-- 1. ГЛАВНАЯ СТРАНИЦА (КАТАЛОГ) -->
+<div id="view-catalog" class="view-section pt-24 pb-20 min-h-screen">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex justify-between items-end mb-6">
+<h2 class="text-3xl font-black text-white">Моя библиотека</h2>
+<span class="text-slate-400 text-sm font-medium" id="manga-count">0 тайтлов</span>
+</div>
+
+<div id="manga-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
+<!-- Сюда вставляются карточки манги из JS -->
+</div>
+
+<div id="empty-catalog" class="hidden flex flex-col items-center justify-center py-20 text-slate-500">
+<i class="fa-solid fa-folder-open text-6xl mb-4 opacity-20"></i>
+<p class="text-lg font-medium">Каталог пуст или ничего не найдено.</p>
+<button onclick="openModal('modal-add-manga')" class="mt-4 text-purple-400 hover:text-purple-300 underline underline-offset-4">Добавить первую мангу</button>
+</div>
+</div>
+</div>
+
+<!-- 2. СТРАНИЦА ДЕТАЛЕЙ МАНГИ -->
+<div id="view-details" class="view-section hidden pt-24 pb-20 min-h-screen">
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+<button onclick="goHome()" class="mb-6 text-slate-400 hover:text-white flex items-center gap-2 transition-colors w-fit bg-slate-800/50 px-4 py-2 rounded-full">
+<i class="fa-solid fa-arrow-left"></i> Назад в библиотеку
+</button>
+
+<div class="bg-slate-800/40 rounded-3xl p-4 sm:p-8 border border-slate-700/50 flex flex-col md:flex-row gap-8 shadow-2xl relative">
+<!-- Кнопка удаления манги -->
+<button onclick="deleteCurrentManga()" class="absolute top-4 right-4 sm:top-8 sm:right-8 bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white w-10 h-10 rounded-xl flex items-center justify-center transition-colors" title="Удалить мангу">
+<i class="fa-solid fa-trash"></i>
+</button>
+
+<div class="w-full md:w-72 shrink-0">
+<img id="det-cover" src="" class="w-full h-[400px] object-cover rounded-2xl shadow-lg border border-slate-700" alt="Обложка">
+</div>
+
+<div class="flex-1 flex flex-col">
+<h1 id="det-title" class="text-3xl sm:text-4xl font-black mb-4 text-white leading-tight">Название</h1>
+
+<div class="bg-slate-900/50 p-4 rounded-xl mb-6 border border-slate-800 flex-1">
+<h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Описание</h3>
+<p id="det-desc" class="text-slate-300 text-sm sm:text-base leading-relaxed">Описание...</p>
+</div>
+
+<div class="mt-auto">
+<div class="flex justify-between items-center mb-4 border-b border-slate-700 pb-3">
+<h3 class="text-xl font-bold flex items-center gap-2">
+<i class="fa-solid fa-list text-purple-500"></i> Список глав
+</h3>
+<button onclick="openModal('modal-add-chapter')" class="bg-purple-600 hover:bg-purple-500 text-white text-sm font-bold py-2 px-4 rounded-xl transition-all shadow-lg flex items-center gap-2">
+<i class="fa-solid fa-plus"></i> Добавить главу
+</button>
+</div>
+
+<!-- Список глав -->
+<div id="det-chapters" class="flex flex-col gap-2 max-h-80 overflow-y-auto pr-2 custom-scrollbar">
+<!-- Главы вставляются из JS -->
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- 3. ЧИТАЛКА МАНГИ -->
+<div id="view-reader" class="view-section hidden min-h-screen theme-dark transition-colors duration-300 relative">
+
+<!-- Навбар читалки -->
+<div id="reader-navbar" class="fixed top-0 w-full z-50 bg-slate-950/90 backdrop-blur-md border-b border-slate-800 flex items-center justify-between p-3 transition-transform duration-300">
+<button onclick="closeReader()" class="text-slate-400 hover:text-white p-2 rounded-lg bg-slate-800/50">
+<i class="fa-solid fa-arrow-left text-xl"></i>
+</button>
+<div class="text-center flex-1 mx-4 truncate">
+<h3 id="read-manga-title" class="font-bold text-sm sm:text-base text-white truncate">Манга</h3>
+<p id="read-chapter-title" class="text-xs text-purple-400 truncate">Глава</p>
+</div>
+<button onclick="openModal('modal-settings')" class="text-slate-400 hover:text-white p-2 rounded-lg bg-slate-800/50">
+<i class="fa-solid fa-gear text-xl"></i>
+</button>
+</div>
+
+<!-- Контейнер страниц -->
+<div id="read-images" class="max-w-[800px] mx-auto flex flex-col items-center pt-20 pb-10 min-h-screen">
+<!-- Картинки из JS -->
+</div>
+
+<!-- Кнопки в конце главы -->
+<div class="max-w-[800px] mx-auto px-4 pb-20">
+<div class="grid grid-cols-2 gap-4 mt-8 border-t border-slate-800 pt-8">
+<button id="btn-prev-chap" onclick="changeChapter(-1)" class="bg-slate-800 hover:bg-slate-700 text-white font-bold py-4 rounded-xl transition-colors flex items-center justify-center gap-2 disabled:opacity-30 disabled:cursor-not-allowed">
+<i class="fa-solid fa-chevron-left"></i> <span class="hidden sm:inline">Предыдущая</span>
+</button>
+<button id="btn-next-chap" onclick="changeChapter(1)" class="bg-purple-600 hover:bg-purple-500 text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-purple-600/20 flex items-center justify-center gap-2 disabled:opacity-30 disabled:cursor-not-allowed">
+<span class="hidden sm:inline">Следующая</span> <i class="fa-solid fa-chevron-right"></i>
+</button>
+</div>
+<button onclick="closeReader()" class="w-full mt-4 bg-transparent border border-slate-700 hover:bg-slate-800 text-slate-400 hover:text-white py-3 rounded-xl transition-colors font-medium">
+Вернуться к списку глав
+</button>
+</div>
+</div>
+
+<!-- МОДАЛКИ (Всплывающие окна) -->
+
+<!-- Модалка: Новая Манга -->
+<div id="modal-add-manga" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[60] flex items-center justify-center p-4 opacity-0 transition-opacity">
+<div class="bg-slate-900 rounded-3xl max-w-md w-full p-6 border border-slate-700 shadow-2xl transform scale-95 transition-transform">
+<div class="flex justify-between items-center mb-6">
+<h3 class="text-2xl font-black text-white">Новая манга</h3>
+<button onclick="closeModal('modal-add-manga')" class="text-slate-500 hover:text-white bg-slate-800 w-8 h-8 rounded-full flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+</div>
+<form onsubmit="handleCreateManga(event)" class="space-y-4">
+<div>
+<label class="block text-xs font-bold text-slate-400 uppercase mb-1">Название</label>
+<input type="text" id="inp-manga-title" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:border-purple-500 focus:outline-none transition-colors" placeholder="Например: Берсерк">
+</div>
+<div>
+<label class="block text-xs font-bold text-slate-400 uppercase mb-1">Прямая ссылка на обложку (URL)</label>
+<input type="url" id="inp-manga-cover" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:border-purple-500 focus:outline-none transition-colors" placeholder="https://raw.githubusercontent.com/...">
+</div>
+<div>
+<label class="block text-xs font-bold text-slate-400 uppercase mb-1">Описание сюжета</label>
+<textarea id="inp-manga-desc" rows="3" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:border-purple-500 focus:outline-none transition-colors resize-none" placeholder="Пара слов о сюжете..."></textarea>
+</div>
+<button type="submit" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 rounded-xl shadow-lg mt-4 transition-colors">Создать тайтл</button>
+</form>
+</div>
+</div>
+
+<!-- Модалка: Новая Глава -->
+<div id="modal-add-chapter" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[60] flex items-center justify-center p-4 opacity-0 transition-opacity">
+<div class="bg-slate-900 rounded-3xl max-w-md w-full p-6 border border-slate-700 shadow-2xl transform scale-95 transition-transform">
+<div class="flex justify-between items-center mb-6">
+<h3 class="text-2xl font-black text-white">Добавить главу</h3>
+<button onclick="closeModal('modal-add-chapter')" class="text-slate-500 hover:text-white bg-slate-800 w-8 h-8 rounded-full flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+</div>
+<form onsubmit="handleCreateChapter(event)" class="space-y-4">
+<div>
+<label class="block text-xs font-bold text-slate-400 uppercase mb-1">Название/Номер главы</label>
+<input type="text" id="inp-chap-title" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:border-purple-500 focus:outline-none transition-colors" placeholder="Например: Глава 1">
+</div>
+<div>
+<label class="block text-xs font-bold text-slate-400 uppercase mb-1">Ссылки на картинки (каждая с новой строки)</label>
+<textarea id="inp-chap-images" required rows="6" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:border-purple-500 focus:outline-none transition-colors whitespace-pre" placeholder="https://ссылка1.jpg https://ссылка2.jpg"></textarea>
+<p class="text-xs text-slate-500 mt-2">Совет: загрузите картинки на GitHub и скопируйте Raw-ссылки сюда.</p>
+</div>
+<button type="submit" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 rounded-xl shadow-lg mt-4 transition-colors">Опубликовать главу</button>
+</form>
+</div>
+</div>
+
+<!-- Модалка: Настройки читалки -->
+<div id="modal-settings" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[60] flex items-center justify-center p-4 opacity-0 transition-opacity">
+<div class="bg-slate-900 rounded-3xl max-w-sm w-full p-6 border border-slate-700 shadow-2xl transform scale-95 transition-transform">
+<div class="flex justify-between items-center mb-6">
+<h3 class="text-xl font-black text-white">Настройки</h3>
+<button onclick="closeModal('modal-settings')" class="text-slate-500 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+</div>
+<p class="text-sm font-bold text-slate-400 uppercase mb-3">Фон при чтении:</p>
+<div class="flex gap-4 mb-6">
+<button onclick="setTheme('theme-dark')" class="w-14 h-14 rounded-2xl bg-[#020617] border-2 border-purple-500 shadow-lg"></button>
+<button onclick="setTheme('theme-gray')" class="w-14 h-14 rounded-2xl bg-[#1e293b] border-2 border-transparent hover:border-slate-500"></button>
+<button onclick="setTheme('theme-light')" class="w-14 h-14 rounded-2xl bg-[#f1f5f9] border-2 border-transparent hover:border-slate-500"></button>
+</div>
+<button onclick="closeModal('modal-settings')" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 rounded-xl transition-colors">Закрыть</button>
+</div>
+</div>
+
+<!-- ОСНОВНОЙ JAVASCRIPT -->
+<script>
+/* 1. БАЗА ДАННЫХ И СОСТОЯНИЯ */
+let db = [];
+let state = {
+mangaId: null,
+chapterIndex: null
+};
+
+// Стартовые данные для примера (если хранилище пустое)
+const sampleData = [{
+id: 1700000000000,
+title: "Добро пожаловать в MangaWeb",
+cover: "https://images.unsplash.com/photo-1618331835717-801e976710b2?auto=format&fit=crop&q=80&w=500",
+desc: "Это тестовая манга. Нажми «Новая манга» сверху, чтобы создать свою собственную историю, и добавляй главы!",
+chapters: []
+}];
+
+/* 2. ИНИЦИАЛИЗАЦИЯ (При загрузке страницы) */
+window.onload = function() {
+// Загружаем данные из памяти телефона
+const saved = localStorage.getItem('MangaProDB');
+if (saved) {
+try {
+db = JSON.parse(saved);
+} catch(e) {
+db = sampleData; // Защита от поломки JSON
+}
+} else {
+db = sampleData;
+}
+saveDB();
+renderCatalog(db);
+};
+
+function saveDB() {
+localStorage.setItem('MangaProDB', JSON.stringify(db));
+}
+
+/* 3. УПРАВЛЕНИЕ ВИДАМИ (ЭКРАНАМИ) */
+function showView(viewId) {
+// Прячем все экраны
+document.getElementById('view-catalog').classList.add('hidden');
+document.getElementById('view-details').classList.add('hidden');
+document.getElementById('view-reader').classList.add('hidden');
+document.getElementById('main-nav').classList.add('hidden');
+
+// Показываем нужный
+document.getElementById(viewId).classList.remove('hidden');
+
+// Показываем навбар только на главной и деталях
+if(viewId !== 'view-reader') {
+document.getElementById('main-nav').classList.remove('hidden');
+}
+
+// Скролл вверх при смене экрана
+window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+function goHome() {
+state.mangaId = null;
+state.chapterIndex = null;
+document.getElementById('search-input').value = '';
+renderCatalog(db);
+showView('view-catalog');
+}
+
+/* 4. ОТРИСОВКА КАТАЛОГА */
+function renderCatalog(dataToRender) {
+const grid = document.getElementById('manga-grid');
+const emptyState = document.getElementById('empty-catalog');
+document.getElementById('manga-count').textContent = dataToRender.length + ' тайтлов';
+
+grid.innerHTML = '';
+
+if (dataToRender.length === 0) {
+emptyState.classList.remove('hidden');
+} else {
+emptyState.classList.add('hidden');
+dataToRender.forEach(manga => {
+// Ищем последнюю главу для отображения бейджа
+let lastChap = manga.chapters.length > 0
+? manga.chapters[manga.chapters.length - 1].title
+: "Нет глав";
+
+grid.innerHTML += &lt;div class="manga-card cursor-pointer bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 flex flex-col h-full relative" onclick="openDetails(${manga.id})">
+<div class="relative pt-[140%] bg-slate-800">
+<img src="${manga.cover}" alt="cover" class="absolute top-0 left-0 w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/400x600/1e293b/94a3b8?text=Нет+обложки'"&gt; &lt;div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-90"&gt;&lt;/div&gt; &lt;/div&gt; &lt;div class="absolute bottom-0 w-full p-4"&gt; &lt;h3 class="font-bold text-white leading-tight mb-1 line-clamp-2"&gt;${manga.title}</h3>
+<p class="text-purple-400 text-xs font-medium"><i class="fa-solid fa-layer-group"></i> ${lastChap}&lt;/p&gt; &lt;/div&gt; &lt;/div&gt;;
+});
+}
+}
+
+function searchManga() {
+const q = document.getElementById('search-input').value.toLowerCase();
+const filtered = db.filter(m => m.title.toLowerCase().includes(q));
+renderCatalog(filtered);
+}
+
+/* 5. ОТРИСОВКА ДЕТАЛЕЙ */
+window.openDetails = function(mangaId) {
+const manga = db.find(m => m.id === mangaId);
+if(!manga) return;
+
+state.mangaId = mangaId;
+
+document.getElementById('det-title').textContent = manga.title;
+document.getElementById('det-desc').textContent = manga.desc || "Описание отсутствует.";
+document.getElementById('det-cover').src = manga.cover;
+
+const chapList = document.getElementById('det-chapters');
+chapList.innerHTML = '';
+
+if(manga.chapters.length === 0) {
+chapList.innerHTML = '<div class="p-8 text-center text-slate-500 border-2 border-dashed border-slate-700 rounded-xl">Глав пока нет. Нажмите "Добавить главу".</div>';
+} else {
+// Выводим главы в обратном порядке (новые сверху)
+const reversed = [...manga.chapters].reverse();
+
+reversed.forEach((chap, revIndex) => {
+// Оригинальный индекс в массиве нужен для читалки
+const originalIndex = manga.chapters.length - 1 - revIndex;
+
+chapList.innerHTML += &lt;div class="flex items-center justify-between bg-slate-900/80 hover:bg-slate-800 p-3 sm:p-4 rounded-xl border border-slate-800 transition-colors group"&gt; &lt;button class="flex-1 text-left font-bold text-white group-hover:text-purple-400 transition-colors" onclick="openReader(${originalIndex})">
+${chap.title} &lt;/button&gt; &lt;div class="flex gap-2"&gt; &lt;button onclick="deleteChapter(${originalIndex})" class="w-10 h-10 flex items-center justify-center rounded-lg text-slate-500 hover:text-red-500 hover:bg-red-500/10 transition-colors" title="Удалить главу">
+<i class="fa-solid fa-trash"></i>
+</button>
+<button onclick="openReader(${originalIndex})" class="w-10 h-10 flex items-center justify-center bg-purple-600/20 text-purple-400 rounded-lg hover:bg-purple-600 hover:text-white transition-colors"&gt; &lt;i class="fa-solid fa-play"&gt;&lt;/i&gt; &lt;/button&gt; &lt;/div&gt; &lt;/div&gt;;
+});
+}
+
+showView('view-details');
+}
+
+/* 6. ЧИТАЛКА */
+window.openReader = function(index) {
+const manga = db.find(m => m.id === state.mangaId);
+if(!manga || !manga.chapters[index]) return;
+
+state.chapterIndex = index;
+const chap = manga.chapters[index];
+
+document.getElementById('read-manga-title').textContent = manga.title;
+document.getElementById('read-chapter-title').textContent = chap.title;
+
+// Настройка кнопок Следующая/Предыдущая
+const btnPrev = document.getElementById('btn-prev-chap');
+const btnNext = document.getElementById('btn-next-chap');
+
+btnPrev.disabled = (index === 0); // Если это первая глава, отключаем "Предыдущую"
+btnNext.disabled = (index === manga.chapters.length - 1); // Если последняя - "Следующую"
+
+// Загрузка картинок
+const imgContainer = document.getElementById('read-images');
+imgContainer.innerHTML = '';
+
+chap.images.forEach((url, i) => {
+if(url.trim() === '') return;
+imgContainer.innerHTML += &lt;img src="${url.trim()}"
+alt="page-${i+1}" class="w-full object-contain m-0 block bg-black" onerror="this.onerror=null; this.src='https://via.placeholder.com/800x600/1e293b/ef4444?text=Ошибка+загрузки+страницы';"&gt;;
+});
+
+showView('view-reader');
+}
+
+window.closeReader = function() {
+openDetails(state.mangaId);
+}
+
+window.changeChapter = function(direction) {
+const manga = db.find(m => m.id === state.mangaId);
+const newIndex = state.chapterIndex + direction;
+
+if (newIndex >= 0 && newIndex < manga.chapters.length) {
+openReader(newIndex);
+}
+}
+
+/* 7. ФУНКЦИИ ДОБАВЛЕНИЯ И УДАЛЕНИЯ */
+window.handleCreateManga = function(e) {
+e.preventDefault();
+const title = document.getElementById('inp-manga-title').value.trim();
+const cover = document.getElementById('inp-manga-cover').value.trim();
+const desc = document.getElementById('inp-manga-desc').value.trim();
+
+const newManga = {
+id: Date.now(),
+title: title,
+cover: cover,
+desc: desc,
+chapters: []
+};
+
+db.push(newManga);
+saveDB();
+
+e.target.reset(); // Очищаем форму
+closeModal('modal-add-manga');
+showNotification('Манга успешно создана!');
+openDetails(newManga.id); // Сразу переходим в нее
+}
+
+window.handleCreateChapter = function(e) {
+e.preventDefault();
+const title = document.getElementById('inp-chap-title').value.trim();
+const rawImages = document.getElementById('inp-chap-images').value;
+
+// Разбиваем текст на строки и убираем пустые
+const images = rawImages.split('\n').map(u => u.trim()).filter(u => u !== '');
+
+const manga = db.find(m => m.id === state.mangaId);
+manga.chapters.push({
+title: title,
+images: images
+});
+
+saveDB();
+e.target.reset();
+closeModal('modal-add-chapter');
+showNotification('Глава опубликована!');
+openDetails(state.mangaId); // Обновляем список глав на экране
+}
+
+window.deleteCurrentManga = function() {
+if(confirm("Вы уверены, что хотите удалить эту мангу? Это действие нельзя отменить.")) {
+db = db.filter(m => m.id !== state.mangaId);
+saveDB();
+showNotification('Манга удалена');
+goHome();
+}
+}
+
+window.deleteChapter = function(index) {
+if(confirm("Удалить эту главу?")) {
+const manga = db.find(m => m.id === state.mangaId);
+manga.chapters.splice(index, 1);
+saveDB();
+showNotification('Глава удалена');
+openDetails(state.mangaId);
+}
+}
+
+/* 8. УПРАВЛЕНИЕ ОКНАМИ И ТЕМАМИ */
+window.openModal = function(id) {
+const m = document.getElementById(id);
+m.classList.remove('hidden');
+// Маленькая задержка для анимации появления
+setTimeout(() => {
+m.classList.remove('opacity-0');
+m.querySelector('div').classList.remove('scale-95');
+}, 10);
+}
+
+window.closeModal = function(id) {
+const m = document.getElementById(id);
+m.classList.add('opacity-0');
+m.querySelector('div').classList.add('scale-95');
+setTimeout(() => { m.classList.add('hidden'); }, 200); // Ждем конец анимации
+}
+
+window.setTheme = function(themeClass) {
+const reader = document.getElementById('view-reader');
+const nav = document.getElementById('reader-navbar');
+const title = document.getElementById('read-manga-title');
+
+// Сбрасываем старые темы
+reader.classList.remove('theme-dark', 'theme-gray', 'theme-light');
+nav.classList.remove('bg-slate-950/90', 'bg-white/90');
+title.classList.remove('text-white', 'text-slate-900');
+
+// Ставим новую
+reader.classList.add(themeClass);
+
+if (themeClass === 'theme-light') {
+nav.classList.add('bg-white/90');
+title.classList.add('text-slate-900');
+} else {
+nav.classList.add('bg-slate-950/90');
+title.classList.add('text-white');
+}
+}
+
+window.showNotification = function(msg) {
+const t = document.getElementById('toast');
+document.getElementById('toast-msg').textContent = msg;
+t.classList.add('show');
+setTimeout(() => { t.classList.remove('show'); }, 3000);
+}
+
+// Скрывать панель читалки при скролле вниз (погружение)
+let lastScroll = 0;
+window.addEventListener('scroll', () => {
+if(document.getElementById('view-reader').classList.contains('hidden')) return;
+const currentScroll = window.pageYOffset;
+const nav = document.getElementById('reader-navbar');
+
+if (currentScroll > lastScroll && currentScroll > 100) {
+nav.style.transform = 'translateY(-100%)';
+} else {
+nav.style.transform = 'translateY(0)';
+}
+lastScroll = currentScroll;
+});
+</script>
+</body>
+</html>
