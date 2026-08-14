@@ -19,7 +19,7 @@
                 extend: {
                     fontFamily: { sans: ['Nunito', 'sans-serif'] },
                     colors: {
-                        zinc: { 850: '#1f1f22', 900: '#18181b', 950: '#09090b', 900: '#111827', 800: '#1f2937' },
+                        zinc: { 850: '#1f1f22', 900: '#18181b', 950: '#09090b', 800: '#1f2937' },
                         primary: { 500: '#8b5cf6', 600: '#7c3aed' },
                         accent: { 500: '#10b981', 600: '#059669' }
                     },
@@ -73,10 +73,16 @@
             -webkit-text-fill-color: transparent;
         }
         
-        /* Стили для жанров и тегов */
         .badge-selectable { cursor: pointer; user-select: none; transition: all 0.2s ease; }
         .badge-selectable:active { transform: scale(0.9); }
         .badge-active { background-color: #7c3aed !important; color: white !important; border-color: #8b5cf6 !important; box-shadow: 0 0 10px rgba(139, 92, 246, 0.5); }
+
+        .desc-collapsed {
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
     </style>
 </head>
 <body class="antialiased overflow-x-hidden select-none pb-safe">
@@ -90,7 +96,7 @@
     <!-- ВЕРХНЯЯ ПАНЕЛЬ -->
     <header id="main-header" class="fixed top-0 left-0 right-0 z-40 bg-zinc-950/80 backdrop-blur-xl border-b border-zinc-800/50 h-16 flex items-center justify-between px-4 smooth-transition shadow-sm">
         <div class="flex items-center gap-4">
-            <button onclick="window.toggleDrawer()" class="text-zinc-400 hover:text-white p-2 text-xl active:scale-90 smooth-transition">
+            <button type="button" onclick="window.toggleDrawer()" class="text-zinc-400 hover:text-white p-2 text-xl active:scale-90 smooth-transition">
                 <i class="fa-solid fa-bars"></i>
             </button>
             <div class="flex items-center gap-2 cursor-pointer group" onclick="window.goHome()">
@@ -119,49 +125,71 @@
                     <span class="text-[10px] text-zinc-400 font-bold uppercase tracking-widest mt-1">Открой свою мангу</span>
                 </div>
             </div>
-            <button onclick="window.toggleDrawer()" class="text-zinc-500 hover:text-white text-xl smooth-transition active:scale-90"><i class="fa-solid fa-xmark"></i></button>
+            <button type="button" onclick="window.toggleDrawer()" class="text-zinc-500 hover:text-white text-xl smooth-transition active:scale-90"><i class="fa-solid fa-xmark"></i></button>
         </div>
         
         <div class="flex-1 overflow-y-auto py-2 flex flex-col gap-1 px-2 custom-scrollbar">
-            <button onclick="window.goHome(); window.toggleDrawer()" class="menu-item-hover flex items-center justify-between p-3 rounded-xl hover:bg-zinc-800/60 text-zinc-300 font-bold smooth-transition group">
+            <button type="button" onclick="window.goHome(); window.toggleDrawer()" class="menu-item-hover flex items-center justify-between p-3 rounded-xl hover:bg-zinc-800/60 text-zinc-300 font-bold smooth-transition group">
                 <div class="flex items-center gap-4"><i class="fa-solid fa-list-ul w-5 text-center text-zinc-500 group-hover:text-primary-400 smooth-transition"></i> Каталог</div>
                 <i class="fa-solid fa-chevron-down text-[10px] text-zinc-600"></i>
             </button>
-            <button onclick="window.switchTab('latest'); window.toggleDrawer()" class="menu-item-hover flex items-center justify-between p-3 rounded-xl hover:bg-zinc-800/60 text-zinc-300 font-bold smooth-transition group">
+            <button type="button" onclick="window.switchTab('latest'); window.toggleDrawer()" class="menu-item-hover flex items-center justify-between p-3 rounded-xl hover:bg-zinc-800/60 text-zinc-300 font-bold smooth-transition group">
                 <div class="flex items-center gap-4"><i class="fa-solid fa-fire-flame-curved w-5 text-center text-zinc-500 group-hover:text-orange-400 smooth-transition"></i> Сейчас читают</div>
             </button>
-            
-            <div class="my-2 border-t border-zinc-800/50 mx-3"></div>
-            
-            <button onclick="window.switchTab('favorites'); window.toggleDrawer()" class="menu-item-hover flex items-center justify-between p-3 rounded-xl hover:bg-zinc-800/60 text-zinc-300 font-bold smooth-transition group">
+            <button type="button" onclick="window.switchTab('favorites'); window.toggleDrawer()" class="menu-item-hover flex items-center justify-between p-3 rounded-xl hover:bg-zinc-800/60 text-zinc-300 font-bold smooth-transition group">
                 <div class="flex items-center gap-4"><i class="fa-solid fa-star w-5 text-center text-zinc-500 group-hover:text-yellow-400 smooth-transition"></i> Коллекции (Избранное)</div>
             </button>
 
-            <!-- НОВЫЕ РАБОЧИЕ КНОПКИ ЖАНРОВ И ТЕГОВ -->
-            <button onclick="window.openGenres(); window.toggleDrawer()" class="menu-item-hover flex items-center justify-between p-3 rounded-xl hover:bg-zinc-800/60 text-zinc-300 font-bold smooth-transition group">
+            <div class="my-2 border-t border-zinc-800/50 mx-3"></div>
+
+            <button type="button" onclick="window.comingSoon()" class="menu-item-hover flex items-center justify-between p-3 rounded-xl hover:bg-zinc-800/60 text-zinc-300 font-bold smooth-transition group">
+                <div class="flex items-center gap-4"><i class="fa-regular fa-newspaper w-5 text-center text-zinc-500 group-hover:text-white smooth-transition"></i> Новости</div>
+            </button>
+            <button type="button" onclick="window.comingSoon()" class="menu-item-hover flex items-center justify-between p-3 rounded-xl hover:bg-zinc-800/60 text-zinc-300 font-bold smooth-transition group">
+                <div class="flex items-center gap-4"><i class="fa-solid fa-users w-5 text-center text-zinc-500 group-hover:text-white smooth-transition"></i> Команды</div>
+            </button>
+            <button type="button" onclick="window.comingSoon()" class="menu-item-hover flex items-center justify-between p-3 rounded-xl hover:bg-zinc-800/60 text-zinc-300 font-bold smooth-transition group">
+                <div class="flex items-center gap-4"><i class="fa-solid fa-user w-5 text-center text-zinc-500 group-hover:text-white smooth-transition"></i> Персоны</div>
+            </button>
+            <button type="button" onclick="window.comingSoon()" class="menu-item-hover flex items-center justify-between p-3 rounded-xl hover:bg-zinc-800/60 text-zinc-300 font-bold smooth-transition group">
+                <div class="flex items-center gap-4"><i class="fa-solid fa-building w-5 text-center text-zinc-500 group-hover:text-white smooth-transition"></i> Издательства</div>
+            </button>
+
+            <div class="my-2 border-t border-zinc-800/50 mx-3"></div>
+
+            <button type="button" onclick="window.openGenres(); window.toggleDrawer()" class="menu-item-hover flex items-center justify-between p-3 rounded-xl hover:bg-zinc-800/60 text-zinc-300 font-bold smooth-transition group">
                 <div class="flex items-center gap-4"><i class="fa-solid fa-masks-theater w-5 text-center text-zinc-500 group-hover:text-purple-400 smooth-transition"></i> Жанры</div>
                 <i class="fa-solid fa-chevron-right text-[10px] text-zinc-600"></i>
             </button>
-            <button onclick="window.openTags(); window.toggleDrawer()" class="menu-item-hover flex items-center justify-between p-3 rounded-xl hover:bg-zinc-800/60 text-zinc-300 font-bold smooth-transition group">
+            <button type="button" onclick="window.openTags(); window.toggleDrawer()" class="menu-item-hover flex items-center justify-between p-3 rounded-xl hover:bg-zinc-800/60 text-zinc-300 font-bold smooth-transition group">
                 <div class="flex items-center gap-4"><i class="fa-solid fa-tags w-5 text-center text-zinc-500 group-hover:text-blue-400 smooth-transition"></i> Теги</div>
                 <i class="fa-solid fa-chevron-right text-[10px] text-zinc-600"></i>
             </button>
 
-            <button onclick="window.randomManga()" class="mt-4 mx-2 mb-2 flex items-center justify-center gap-2 p-3.5 rounded-xl bg-accent-600/20 border border-accent-500/30 text-accent-500 hover:bg-accent-600 hover:text-white font-black smooth-transition shadow-[0_0_15px_rgba(16,185,129,0.15)] hover:shadow-[0_0_20px_rgba(16,185,129,0.4)] active:scale-95">
+            <div class="mt-4 mb-2 mx-2">
+                <div class="text-[10px] font-black text-zinc-500 uppercase px-2 mb-2 tracking-widest">Следите за нами</div>
+                <div class="flex gap-2 px-2">
+                    <a href="https://t.me/ledstena" target="_blank" class="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-500 hover:bg-blue-500 hover:text-white flex items-center justify-center text-lg smooth-transition active:scale-90"><i class="fa-brands fa-telegram"></i></a>
+                    <a href="#" target="_blank" class="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-500 hover:bg-indigo-500 hover:text-white flex items-center justify-center text-lg smooth-transition active:scale-90"><i class="fa-brands fa-vk"></i></a>
+                    <a href="#" target="_blank" class="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-500 hover:bg-purple-500 hover:text-white flex items-center justify-center text-lg smooth-transition active:scale-90"><i class="fa-brands fa-discord"></i></a>
+                </div>
+            </div>
+
+            <button type="button" onclick="window.randomManga()" class="mt-2 mx-2 mb-2 flex items-center justify-center gap-2 p-3.5 rounded-xl bg-accent-600/20 border border-accent-500/30 text-accent-500 hover:bg-accent-600 hover:text-white font-black smooth-transition shadow-[0_0_15px_rgba(16,185,129,0.15)] hover:shadow-[0_0_20px_rgba(16,185,129,0.4)] active:scale-95">
                 <i class="fa-solid fa-dice text-lg"></i> Случайный тайтл
             </button>
 
             <div id="admin-menu" class="hidden flex-col gap-1 border-t border-zinc-800/50 mt-2 pt-2 mx-2">
                 <div class="text-[10px] font-black text-primary-500 uppercase px-2 mt-2 mb-1 tracking-widest">Панель Автора</div>
-                <button onclick="window.openAddMangaModal(); window.toggleDrawer()" class="flex items-center gap-4 p-3 rounded-xl bg-primary-600/10 text-primary-400 hover:bg-primary-600/20 font-bold smooth-transition text-left">
-                    <i class="fa-solid fa-plus w-5 text-center"></i> Добавить Мангу
+                <button type="button" onclick="window.openAddMangaModal(); window.toggleDrawer()" class="flex items-center gap-4 p-3 rounded-xl bg-primary-600/10 text-primary-400 hover:bg-primary-600/20 font-bold smooth-transition text-left">
+                    <i class="fa-solid fa-plus w-5 text-center"></i> Добавить тайтл
                 </button>
-                <button onclick="window.logoutAdmin()" class="flex items-center gap-4 p-3 rounded-xl text-red-400 hover:bg-red-500/10 font-bold smooth-transition text-left mt-1">
+                <button type="button" onclick="window.logoutAdmin()" class="flex items-center gap-4 p-3 rounded-xl text-red-400 hover:bg-red-500/10 font-bold smooth-transition text-left mt-1">
                     <i class="fa-solid fa-right-from-bracket w-5 text-center"></i> Выйти
                 </button>
             </div>
             
-            <button id="btn-login-admin" onclick="window.showModal('modal-auth'); window.toggleDrawer()" class="flex items-center gap-4 p-3 rounded-xl hover:bg-zinc-800/60 text-left text-zinc-500 font-bold smooth-transition mt-auto mb-4 mx-2">
+            <button type="button" id="btn-login-admin" onclick="window.showModal('modal-auth'); window.toggleDrawer()" class="flex items-center gap-4 p-3 rounded-xl hover:bg-zinc-800/60 text-left text-zinc-500 font-bold smooth-transition mt-auto mb-4 mx-2">
                 <i class="fa-solid fa-lock w-5 text-center"></i> Вход для Автора
             </button>
         </div>
@@ -173,9 +201,9 @@
         <!-- 1. ГЛАВНАЯ СТРАНИЦА -->
         <section id="view-home" class="view-section flex-1 flex flex-col animate-fade-in">
             <div class="flex gap-2 sm:gap-4 mb-6 overflow-x-auto pb-2 custom-scrollbar border-b border-zinc-800">
-                <button onclick="window.switchTab('catalog')" id="tab-catalog" class="tab-btn px-4 py-2.5 rounded-t-xl font-black border-b-2 border-primary-500 text-white whitespace-nowrap smooth-transition tracking-wide"><i class="fa-solid fa-book-open mr-2"></i>Каталог</button>
-                <button onclick="window.switchTab('latest')" id="tab-latest" class="tab-btn px-4 py-2.5 rounded-t-xl font-black border-b-2 border-transparent text-zinc-500 hover:text-zinc-300 whitespace-nowrap smooth-transition tracking-wide"><i class="fa-solid fa-fire mr-2"></i>Обновления</button>
-                <button onclick="window.switchTab('favorites')" id="tab-favorites" class="tab-btn px-4 py-2.5 rounded-t-xl font-black border-b-2 border-transparent text-zinc-500 hover:text-zinc-300 whitespace-nowrap smooth-transition tracking-wide"><i class="fa-solid fa-star mr-2 text-yellow-500/70"></i>Избранное</button>
+                <button type="button" onclick="window.switchTab('catalog')" id="tab-catalog" class="tab-btn px-4 py-2.5 rounded-t-xl font-black border-b-2 border-primary-500 text-white whitespace-nowrap smooth-transition tracking-wide"><i class="fa-solid fa-book-open mr-2"></i>Каталог</button>
+                <button type="button" onclick="window.switchTab('latest')" id="tab-latest" class="tab-btn px-4 py-2.5 rounded-t-xl font-black border-b-2 border-transparent text-zinc-500 hover:text-zinc-300 whitespace-nowrap smooth-transition tracking-wide"><i class="fa-solid fa-fire mr-2"></i>Обновления</button>
+                <button type="button" onclick="window.switchTab('favorites')" id="tab-favorites" class="tab-btn px-4 py-2.5 rounded-t-xl font-black border-b-2 border-transparent text-zinc-500 hover:text-zinc-300 whitespace-nowrap smooth-transition tracking-wide"><i class="fa-solid fa-star mr-2 text-yellow-500/70"></i>Избранное</button>
             </div>
 
             <div id="grid-container" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6 relative min-h-[300px]"></div>
@@ -198,9 +226,7 @@
                 </h2>
                 <p class="text-zinc-400 text-sm">Выберите жанр, чтобы найти подходящую мангу.</p>
             </div>
-            <div id="genres-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                <!-- Жанры генерируются через JS -->
-            </div>
+            <div id="genres-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"></div>
         </section>
 
         <!-- 3. СТРАНИЦА: ТЕГИ -->
@@ -211,20 +237,16 @@
                 </h2>
                 <p class="text-zinc-400 text-sm">Детальный поиск по особенностям сюжета.</p>
             </div>
-            <div id="tags-cloud" class="flex flex-wrap gap-3">
-                <!-- Теги генерируются через JS -->
-            </div>
+            <div id="tags-cloud" class="flex flex-wrap gap-3"></div>
         </section>
 
-        <!-- 4. СТРАНИЦА: РЕЗУЛЬТАТЫ ФИЛЬТРАЦИИ (При клике на жанр/тег) -->
+        <!-- 4. СТРАНИЦА: РЕЗУЛЬТАТЫ ФИЛЬТРАЦИИ -->
         <section id="view-filtered" class="view-section hidden flex-1 animate-slide-up">
-            <button onclick="window.goBackToFilters()" class="mb-6 text-zinc-400 hover:text-white flex items-center gap-2 text-sm bg-zinc-900/80 py-2.5 px-5 rounded-full w-fit border border-zinc-800 smooth-transition hover:bg-zinc-800 active:scale-95 shadow-md">
+            <button type="button" onclick="window.goBackToFilters()" class="mb-6 text-zinc-400 hover:text-white flex items-center gap-2 text-sm bg-zinc-900/80 py-2.5 px-5 rounded-full w-fit border border-zinc-800 smooth-transition hover:bg-zinc-800 active:scale-95 shadow-md">
                 <i class="fa-solid fa-arrow-left"></i> Назад
             </button>
             <div class="mb-6">
-                <h2 id="filtered-title" class="text-2xl sm:text-3xl font-black text-white mb-2 flex items-center gap-3">
-                    Результаты
-                </h2>
+                <h2 id="filtered-title" class="text-2xl sm:text-3xl font-black text-white mb-2 flex items-center gap-3">Результаты</h2>
             </div>
             <div id="filtered-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6 relative min-h-[300px]"></div>
             <div id="filtered-empty" class="hidden absolute inset-0 flex flex-col items-center justify-center text-zinc-500 pointer-events-none mt-20">
@@ -235,49 +257,136 @@
 
         <!-- 5. СТРАНИЦА ДЕТАЛЕЙ МАНГИ -->
         <section id="view-details" class="view-section hidden flex-1 animate-slide-up">
-            <button onclick="window.goHome()" class="mb-6 text-zinc-400 hover:text-white flex items-center gap-2 text-sm bg-zinc-900/80 py-2.5 px-5 rounded-full w-fit border border-zinc-800 smooth-transition hover:bg-zinc-800 active:scale-95 shadow-md">
-                <i class="fa-solid fa-arrow-left"></i> Назад
+            <button type="button" onclick="window.goHome()" class="mb-6 text-zinc-400 hover:text-white flex items-center gap-2 text-sm bg-zinc-900/80 py-2.5 px-5 rounded-full w-fit border border-zinc-800 smooth-transition hover:bg-zinc-800 active:scale-95 shadow-md">
+                <i class="fa-solid fa-arrow-left"></i> Назад в каталог
             </button>
             
-            <div class="bg-zinc-900/60 backdrop-blur-xl rounded-[2rem] p-4 sm:p-8 border border-zinc-800/80 flex flex-col md:flex-row gap-6 sm:gap-10 shadow-2xl relative overflow-hidden">
+            <div class="bg-zinc-900/60 backdrop-blur-xl rounded-[2rem] p-4 sm:p-8 border border-zinc-800/80 shadow-2xl relative overflow-hidden">
                 <div class="absolute top-0 right-0 w-64 h-64 bg-primary-600/10 rounded-full blur-3xl pointer-events-none"></div>
 
-                <button onclick="window.deleteCurrentManga()" class="admin-only hidden absolute top-4 right-4 sm:top-8 sm:right-8 text-red-500 hover:text-white bg-red-500/10 hover:bg-red-500 w-12 h-12 rounded-2xl flex items-center justify-center smooth-transition shadow-lg z-10" title="Удалить тайтл">
-                    <i class="fa-solid fa-trash"></i>
-                </button>
-
-                <div class="w-full md:w-72 shrink-0 relative group z-10">
-                    <img id="det-cover" src="" class="w-full aspect-[2/3] object-cover rounded-2xl bg-zinc-950 shadow-2xl border border-zinc-800 smooth-transition group-hover:shadow-[0_20px_50px_-15px_rgba(124,58,237,0.5)]" alt="Cover" onerror="this.src='https://via.placeholder.com/300x450/18181b/ffffff?text=Нет+обложки'">
-                    <button onclick="window.toggleFavorite()" id="btn-fav" class="absolute bottom-4 right-4 w-12 h-12 bg-zinc-900/90 backdrop-blur-md border border-zinc-700 rounded-full flex items-center justify-center text-xl smooth-transition hover:scale-110 shadow-xl">
-                        <i class="fa-regular fa-star text-zinc-300" id="fav-icon"></i>
-                    </button>
-                </div>
-                
-                <div class="flex-1 flex flex-col z-10">
-                    <h1 id="det-title" class="text-3xl sm:text-4xl lg:text-5xl font-black text-white pr-12 mb-4 leading-tight tracking-tight">...</h1>
-                    
-                    <!-- Блок с Жанрами и Тегами -->
-                    <div class="flex flex-wrap gap-2 mb-6" id="det-badges">
-                        <!-- Сюда вставятся жанры и теги -->
-                    </div>
-
-                    <div class="bg-zinc-950/60 p-5 rounded-2xl mb-8 border border-zinc-800/50 shadow-inner">
-                        <h3 class="text-xs font-black text-primary-500 uppercase tracking-widest mb-3 flex items-center gap-2">
-                            <i class="fa-solid fa-align-left"></i> Описание
-                        </h3>
-                        <p id="det-desc" class="text-zinc-300 text-sm sm:text-base leading-relaxed">...</p>
+                <!-- ВЕРХНИЙ БЛОК: ОБЛОЖКА И ИНФА -->
+                <div class="flex flex-col md:flex-row gap-6 sm:gap-10 relative z-10">
+                    <div class="w-full md:w-72 shrink-0 relative group">
+                        <img id="det-cover" src="" class="w-full aspect-[2/3] object-cover rounded-2xl bg-zinc-950 shadow-2xl border border-zinc-800 smooth-transition group-hover:shadow-[0_20px_50px_-15px_rgba(124,58,237,0.5)]" alt="Cover" onerror="this.src='https://via.placeholder.com/300x450/18181b/ffffff?text=Нет+обложки'">
+                        <button type="button" onclick="window.toggleFavorite()" id="btn-fav" class="absolute bottom-4 right-4 w-12 h-12 bg-zinc-900/90 backdrop-blur-md border border-zinc-700 rounded-full flex items-center justify-center text-xl smooth-transition hover:scale-110 shadow-xl">
+                            <i class="fa-regular fa-star text-zinc-300" id="fav-icon"></i>
+                        </button>
                     </div>
                     
-                    <div class="mt-auto">
-                        <div class="flex items-center justify-between mb-4 pb-4 border-b border-zinc-800/80">
-                            <h3 class="font-black text-xl text-white flex items-center gap-2">
-                                <i class="fa-solid fa-layer-group text-primary-500"></i> Список глав
-                            </h3>
-                            <button onclick="window.showModal('modal-add-chapter')" class="admin-only hidden bg-primary-600 hover:bg-primary-500 text-white font-bold text-sm py-2 px-4 rounded-xl flex items-center gap-2 smooth-transition shadow-lg shadow-primary-600/30 active:scale-95">
-                                <i class="fa-solid fa-plus"></i> <span class="hidden sm:inline">Добавить главу</span>
+                    <div class="flex-1 flex flex-col">
+                        <div class="flex justify-between items-start">
+                            <h1 id="det-title" class="text-3xl sm:text-4xl lg:text-5xl font-black text-white pr-2 mb-2 leading-tight tracking-tight">...</h1>
+                            <button type="button" onclick="window.openEditMangaInfoModal()" class="admin-only hidden shrink-0 text-zinc-400 hover:text-white bg-zinc-800/80 hover:bg-zinc-700 w-10 h-10 rounded-xl flex items-center justify-center smooth-transition shadow"><i class="fa-solid fa-pen"></i></button>
+                        </div>
+                        
+                        <div class="flex flex-wrap items-center text-zinc-400 font-bold text-sm sm:text-base gap-2 mb-4">
+                            <span id="det-meta-type">Манхва</span> • 
+                            <span id="det-meta-year">2019</span> • 
+                            <span id="det-meta-status">завершён</span> • 
+                            <span id="det-meta-age">18+</span>
+                        </div>
+                        
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="flex items-center gap-1.5 bg-yellow-500/10 border border-yellow-500/20 px-3 py-1.5 rounded-xl">
+                                <i class="fa-solid fa-star text-yellow-500 text-sm"></i>
+                                <span class="text-white font-black drop-shadow-md text-sm" id="det-avg-score">0.0</span>
+                            </div>
+                            <span class="text-zinc-400 text-xs font-bold" id="det-rating-count">(0 оценок)</span>
+                            <!-- РЕАЛЬНЫЕ ПРОСМОТРЫ -->
+                            <div class="flex items-center gap-1.5 text-zinc-400 text-sm font-bold ml-4" title="Просмотры"><i class="fa-solid fa-eye text-zinc-500"></i> <span id="manga-views">0</span></div>
+                        </div>
+
+                        <!-- Кнопки действий -->
+                        <div class="flex flex-col sm:flex-row gap-3 mt-auto">
+                            <button type="button" onclick="window.readFirstOrLastChapter()" class="flex-1 bg-primary-600 hover:bg-primary-500 text-white font-black py-4 rounded-xl shadow-lg shadow-primary-600/30 smooth-transition flex items-center justify-center gap-2 active:scale-95">
+                                <i class="fa-solid fa-book-open"></i> Читать
+                            </button>
+                            <button type="button" onclick="window.toggleFavorite()" id="btn-fav-big" class="flex-1 bg-zinc-800/80 hover:bg-zinc-700 border border-zinc-700 text-white font-black py-4 rounded-xl smooth-transition flex items-center justify-center gap-2 active:scale-95">
+                                <i class="fa-solid fa-bookmark text-zinc-400"></i> В список
                             </button>
                         </div>
-                        <div id="det-chapters" class="flex flex-col gap-3 max-h-80 overflow-y-auto pr-2 custom-scrollbar"></div>
+                        
+                        <!-- Админ Кнопки -->
+                        <div class="admin-only hidden grid-cols-2 gap-3 mt-3">
+                            <button type="button" onclick="window.openAddChapterModal()" class="bg-blue-600/20 hover:bg-blue-600 text-blue-400 hover:text-white font-bold py-3 rounded-xl border border-blue-500/30 smooth-transition active:scale-95">
+                                + Добавить главу/том
+                            </button>
+                            <button type="button" onclick="window.deleteCurrentManga()" class="bg-red-500/10 hover:bg-red-600 text-red-500 hover:text-white font-bold py-3 rounded-xl border border-red-500/20 smooth-transition active:scale-95">
+                                Удалить тайтл
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ВКЛАДКИ -->
+                <div class="mt-10 border-b border-zinc-800 flex overflow-x-auto custom-scrollbar relative z-10">
+                    <button type="button" onclick="window.switchDetTab('overview')" id="dtab-overview" class="dtab-btn px-6 py-4 font-black border-b-2 border-primary-500 text-white whitespace-nowrap smooth-transition tracking-wide">Обзор</button>
+                    <button type="button" onclick="window.switchDetTab('chapters')" id="dtab-chapters" class="dtab-btn px-6 py-4 font-black border-b-2 border-transparent text-zinc-500 hover:text-zinc-300 whitespace-nowrap smooth-transition flex items-center gap-2 tracking-wide">Главы <span id="det-chapters-badge" class="bg-zinc-800 text-[10px] px-2 py-0.5 rounded-full text-zinc-400">0</span></button>
+                    <button type="button" onclick="window.switchDetTab('comments')" id="dtab-comments" class="dtab-btn px-6 py-4 font-black border-b-2 border-transparent text-zinc-500 hover:text-zinc-300 whitespace-nowrap smooth-transition flex items-center gap-2 tracking-wide">Комментарии <span id="det-comments-badge" class="bg-primary-600/20 text-primary-400 text-[10px] px-2 py-0.5 rounded-full border border-primary-500/30">0</span></button>
+                </div>
+
+                <!-- КОНТЕНТ ВКЛАДОК -->
+                <div class="mt-8 relative z-10 pb-4">
+                    
+                    <!-- ВКЛАДКА 1: ОБЗОР -->
+                    <div id="det-tab-overview" class="block animate-fade-in space-y-8">
+                        
+                        <div class="bg-zinc-950/60 p-4 rounded-2xl border border-zinc-800/50 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 shadow-inner">
+                            <span class="text-[10px] font-black text-zinc-500 uppercase tracking-widest flex items-center gap-2 shrink-0">
+                                <i class="fa-solid fa-ranking-star text-primary-500"></i> Ваша оценка (1-10)
+                            </span>
+                            <div class="flex gap-1" id="user-rating-stars"></div>
+                        </div>
+
+                        <div class="bg-zinc-950/60 p-6 rounded-2xl border border-zinc-800/50 shadow-inner">
+                            <h3 class="text-xs font-black text-primary-500 uppercase tracking-widest mb-4 flex items-center gap-2">
+                                <i class="fa-solid fa-align-left"></i> Описание
+                            </h3>
+                            <p id="det-desc" class="text-zinc-300 text-sm sm:text-base leading-relaxed desc-collapsed whitespace-pre-wrap"></p>
+                            <button type="button" id="btn-desc-toggle" onclick="window.toggleDesc()" class="text-primary-400 font-bold text-sm mt-3 hover:underline">Показать полностью...</button>
+                        </div>
+                        
+                        <div id="badges-section" class="bg-zinc-950/60 p-6 rounded-2xl border border-zinc-800/50 shadow-inner">
+                            <div class="flex flex-wrap gap-2" id="det-badges"></div>
+                        </div>
+
+                        <div id="translators-section" class="hidden bg-zinc-950/60 p-6 rounded-2xl border border-zinc-800/50 shadow-inner">
+                            <h3 class="text-xs font-black text-primary-500 uppercase tracking-widest mb-4 flex items-center gap-2">
+                                <i class="fa-solid fa-language"></i> Переводчики
+                            </h3>
+                            <div id="det-translators-list" class="flex flex-col gap-4"></div>
+                        </div>
+
+                        <div id="additional-data-section" class="hidden bg-zinc-950/60 p-6 rounded-2xl border border-zinc-800/50 shadow-inner">
+                            <h3 class="text-xs font-black text-primary-500 uppercase tracking-widest mb-4 flex items-center gap-2">
+                                <i class="fa-solid fa-circle-info"></i> Дополнительные данные
+                            </h3>
+                            <div class="overflow-hidden rounded-xl border border-zinc-800/80 text-sm">
+                                <table class="w-full text-left border-collapse bg-zinc-900/40">
+                                    <tbody id="det-info-table" class="divide-y divide-zinc-800/80">
+                                        <!-- Данные генерятся в JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ВКЛАДКА 2: ГЛАВЫ (И ТОМА) -->
+                    <div id="det-tab-chapters" class="hidden animate-fade-in">
+                        <!-- Сюда вставляются тома и главы (JS) -->
+                        <div id="det-chapters" class="flex flex-col gap-2 max-h-[70vh] overflow-y-auto pr-2 custom-scrollbar"></div>
+                    </div>
+
+                    <!-- ВКЛАДКА 3: КОММЕНТАРИИ -->
+                    <div id="det-tab-comments" class="hidden animate-fade-in">
+                        <div class="bg-zinc-950/60 p-5 rounded-2xl border border-zinc-800/50 shadow-inner mb-6">
+                            <input type="text" id="in-det-comment-name" placeholder="Ваше Имя / Никнейм" maxlength="30" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl p-4 text-white text-sm mb-3 outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 smooth-transition shadow-inner">
+                            <textarea id="in-det-comment-text" placeholder="Написать комментарий к тайтлу..." rows="3" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl p-4 text-white text-sm outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 resize-none custom-scrollbar smooth-transition shadow-inner"></textarea>
+                            <div class="flex justify-end mt-3">
+                                <button type="button" onclick="window.submitMangaComment()" class="bg-primary-600 hover:bg-primary-500 text-white font-bold py-3 px-8 rounded-xl text-sm shadow-lg shadow-primary-600/30 smooth-transition active:scale-95">Отправить</button>
+                            </div>
+                        </div>
+                        <div id="manga-comments-list" class="flex flex-col gap-4"></div>
                     </div>
                 </div>
             </div>
@@ -289,24 +398,45 @@
         <div id="reader-click-zone" class="fixed inset-0 z-0" onclick="window.toggleReaderUI()"></div>
         
         <div id="reader-topbar" class="fixed top-0 left-0 right-0 bg-zinc-950/95 backdrop-blur-xl border-b border-zinc-800/80 p-4 flex items-center justify-between z-20 smooth-transition shadow-lg">
-            <button onclick="window.closeReader()" class="text-zinc-400 hover:text-white bg-zinc-900 w-10 h-10 rounded-full flex items-center justify-center smooth-transition hover:bg-zinc-800 active:scale-90">
+            <button type="button" onclick="event.stopPropagation(); window.closeReader()" class="text-zinc-400 hover:text-white bg-zinc-900 w-10 h-10 rounded-full flex items-center justify-center smooth-transition hover:bg-zinc-800 active:scale-90 relative z-30" title="Назад">
                 <i class="fa-solid fa-arrow-left"></i>
             </button>
             <div class="text-center truncate px-4 pointer-events-none">
                 <div id="read-manga-title" class="text-[10px] font-black text-zinc-500 uppercase tracking-widest truncate mb-0.5">...</div>
                 <div id="read-chapter-title" class="text-sm sm:text-base font-black text-white truncate drop-shadow-md">...</div>
             </div>
-            <div class="w-10 text-primary-500 text-xl pointer-events-none text-center"><i class="fa-solid fa-mobile-screen"></i></div>
+            <div class="flex items-center gap-2 relative z-30">
+                <button type="button" onclick="event.stopPropagation(); window.deleteCurrentReadingChapter()" class="admin-only hidden text-red-400 hover:text-white bg-red-500/20 hover:bg-red-600 w-10 h-10 rounded-full flex items-center justify-center smooth-transition active:scale-90 shadow-md">
+                    <i class="fa-solid fa-trash text-sm"></i>
+                </button>
+                <div class="w-10 text-primary-500 text-xl pointer-events-none text-center hidden sm:block"><i class="fa-solid fa-mobile-screen"></i></div>
+            </div>
         </div>
 
-        <div id="reader-pages" class="relative z-10 w-full max-w-[800px] mx-auto flex flex-col items-center mt-[72px] mb-[80px] bg-[#09090b]" onclick="window.toggleReaderUI()"></div>
+        <div class="relative z-10 w-full max-w-[800px] mx-auto flex flex-col mt-[72px] mb-[100px] bg-[#09090b]">
+            <div id="reader-pages" class="flex flex-col items-center w-full" onclick="window.toggleReaderUI()"></div>
+            
+            <div id="reader-comments" class="p-4 sm:p-6 mt-8 border-t border-zinc-800/80 bg-[#09090b] w-full" onclick="event.stopPropagation()">
+                <h3 class="font-black text-2xl text-white mb-6 flex items-center gap-3">
+                    <i class="fa-solid fa-comments text-primary-500"></i> Комментарии
+                </h3>
+                <div class="bg-zinc-900/60 p-4 sm:p-5 rounded-2xl border border-zinc-800/50 mb-8 shadow-inner">
+                    <input type="text" id="in-comment-name" placeholder="Ваше Имя / Никнейм" maxlength="30" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-white text-sm mb-3 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none smooth-transition">
+                    <textarea id="in-comment-text" placeholder="Что думаете о главе?" rows="3" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-white text-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none resize-none custom-scrollbar smooth-transition"></textarea>
+                    <div class="flex justify-end mt-3">
+                        <button type="button" onclick="window.submitComment()" class="bg-primary-600 hover:bg-primary-500 text-white font-bold py-2.5 px-6 rounded-xl text-sm smooth-transition active:scale-95 shadow-lg shadow-primary-600/30">Отправить</button>
+                    </div>
+                </div>
+                <div id="comments-list" class="flex flex-col gap-4"></div>
+            </div>
+        </div>
 
         <div id="reader-bottombar" class="fixed bottom-0 left-0 right-0 bg-zinc-950/95 backdrop-blur-xl border-t border-zinc-800/80 p-4 z-20 smooth-transition shadow-[0_-10px_30px_rgba(0,0,0,0.5)]">
             <div class="max-w-[800px] mx-auto grid grid-cols-2 gap-4">
-                <button id="btn-prev-chap" onclick="window.changeChapter(1)" class="bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 text-white font-bold py-3.5 rounded-xl smooth-transition disabled:opacity-30 disabled:cursor-not-allowed active:scale-95 flex items-center justify-center gap-2">
+                <button type="button" id="btn-prev-chap" onclick="window.changeChapter(1)" class="bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 text-white font-bold py-3.5 rounded-xl smooth-transition disabled:opacity-30 disabled:cursor-not-allowed active:scale-95 flex items-center justify-center gap-2">
                     <i class="fa-solid fa-arrow-left"></i> <span class="hidden sm:inline text-xs sm:text-sm">Предыдущая глава</span>
                 </button>
-                <button id="btn-next-chap" onclick="window.changeChapter(-1)" class="bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 text-white font-bold py-3.5 rounded-xl smooth-transition disabled:opacity-30 disabled:cursor-not-allowed active:scale-95 shadow-lg shadow-primary-600/30 flex items-center justify-center gap-2">
+                <button type="button" id="btn-next-chap" onclick="window.changeChapter(-1)" class="bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 text-white font-bold py-3.5 rounded-xl smooth-transition disabled:opacity-30 disabled:cursor-not-allowed active:scale-95 shadow-lg shadow-primary-600/30 flex items-center justify-center gap-2">
                     <span class="hidden sm:inline text-xs sm:text-sm">Следующая глава</span> <i class="fa-solid fa-arrow-right"></i>
                 </button>
             </div>
@@ -314,83 +444,141 @@
     </div>
 
     <!-- МОДАЛЬНЫЕ ОКНА -->
-    <!-- Вход для автора -->
     <div id="modal-auth" class="fixed inset-0 bg-black/80 backdrop-blur-md z-[100] flex items-center justify-center p-4 opacity-0 invisible pointer-events-none smooth-transition">
         <div class="bg-zinc-900 border border-zinc-800 w-full max-w-sm rounded-[2rem] p-8 shadow-2xl transform scale-95 translate-y-10 smooth-transition text-center relative overflow-hidden">
             <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary-500 to-purple-500"></div>
-            <div class="w-16 h-16 bg-primary-600/10 text-primary-500 rounded-2xl flex items-center justify-center mx-auto mb-4 text-3xl shadow-inner">
-                <i class="fa-solid fa-crown"></i>
-            </div>
+            <div class="w-16 h-16 bg-primary-600/10 text-primary-500 rounded-2xl flex items-center justify-center mx-auto mb-4 text-3xl shadow-inner"><i class="fa-solid fa-crown"></i></div>
             <h3 class="text-2xl font-black text-white mb-2">Создатель</h3>
             <p class="text-sm text-zinc-500 mb-8 font-semibold">Введите ПИН-код для доступа</p>
             <form onsubmit="window.loginAdmin(event)" class="space-y-4">
-                <input type="password" id="in-admin-pass" required class="w-full bg-zinc-950 border border-zinc-800 rounded-2xl p-4 text-center text-white tracking-widest font-bold text-2xl focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 smooth-transition shadow-inner" placeholder="****">
+                <input type="password" id="in-admin-pass" required class="w-full bg-zinc-950 border border-zinc-800 rounded-2xl p-4 text-center text-white tracking-widest font-bold text-2xl outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 shadow-inner" placeholder="****">
                 <button type="submit" class="w-full bg-primary-600 hover:bg-primary-500 text-white font-bold py-4 rounded-2xl shadow-lg shadow-primary-600/30 active:scale-95 smooth-transition">Войти</button>
             </form>
-            <button onclick="window.hideModal('modal-auth')" class="mt-6 text-sm font-bold text-zinc-500 hover:text-white smooth-transition">Отмена</button>
+            <button type="button" onclick="window.hideModal('modal-auth')" class="mt-6 text-sm font-bold text-zinc-500 hover:text-white smooth-transition">Отмена</button>
         </div>
     </div>
 
-    <!-- Добавить Мангу (Обновлено с Жанрами и Тегами) -->
-    <div id="modal-add-manga" class="fixed inset-0 bg-black/80 backdrop-blur-md z-[100] flex items-center justify-center p-4 opacity-0 invisible pointer-events-none smooth-transition">
-        <div class="bg-zinc-900 border border-zinc-800 w-full max-w-2xl max-h-[90vh] overflow-y-auto custom-scrollbar rounded-[2rem] p-6 sm:p-8 shadow-2xl transform scale-95 translate-y-10 smooth-transition">
-            <div class="flex justify-between items-center mb-6 sticky top-0 bg-zinc-900 z-10 pb-2 border-b border-zinc-800/80">
-                <h3 class="text-2xl font-black text-white">Новый тайтл</h3>
-                <button onclick="window.hideModal('modal-add-manga')" class="text-zinc-500 hover:text-white bg-zinc-800/50 hover:bg-zinc-800 w-10 h-10 rounded-full smooth-transition active:scale-90"><i class="fa-solid fa-xmark"></i></button>
+    <!-- РЕДАКТОР МАНГИ -->
+    <div id="modal-edit-manga" class="fixed inset-0 bg-black/80 backdrop-blur-md z-[100] flex items-center justify-center p-2 sm:p-4 opacity-0 invisible pointer-events-none smooth-transition">
+        <div class="bg-zinc-900 border border-zinc-800 w-full max-w-3xl h-[90vh] flex flex-col rounded-[2rem] shadow-2xl transform scale-95 translate-y-10 smooth-transition overflow-hidden">
+            <div class="flex justify-between items-center p-5 sm:p-6 border-b border-zinc-800/80 shrink-0 bg-zinc-900 z-10">
+                <h3 id="edit-manga-modal-title" class="text-xl sm:text-2xl font-black text-white">Редактор тайтла</h3>
+                <button type="button" onclick="window.hideModal('modal-edit-manga')" class="text-zinc-500 hover:text-white bg-zinc-800/50 hover:bg-zinc-800 w-10 h-10 rounded-full flex justify-center items-center smooth-transition active:scale-90"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <form id="form-add-manga" onsubmit="window.submitManga(event)" class="space-y-6">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            
+            <div class="flex-1 overflow-y-auto custom-scrollbar p-4 sm:p-6">
+                <form id="form-edit-manga" onsubmit="window.submitMangaData(event)" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div>
+                            <label class="block text-xs font-black text-zinc-400 uppercase tracking-widest mb-2">Название *</label>
+                            <input type="text" id="in-em-title" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-4 text-white outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-black text-zinc-400 uppercase tracking-widest mb-2">Обложка (URL) *</label>
+                            <input type="url" id="in-em-cover" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-4 text-white outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500">
+                        </div>
+                    </div>
+                    
                     <div>
-                        <label class="block text-xs font-black text-zinc-400 uppercase tracking-widest mb-2">Название</label>
-                        <input type="text" id="in-title" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-4 text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none smooth-transition" placeholder="Название манги">
+                        <label class="block text-xs font-black text-zinc-400 uppercase tracking-widest mb-2">Сюжет / Описание</label>
+                        <textarea id="in-em-desc" rows="4" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-4 text-white outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 resize-none custom-scrollbar"></textarea>
+                    </div>
+
+                    <div class="bg-zinc-950/50 border border-zinc-800/80 p-5 rounded-2xl shadow-inner">
+                        <h4 class="text-primary-500 font-black text-xs uppercase tracking-widest mb-4 border-b border-zinc-800 pb-2">Мета-данные (Основа)</h4>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                            <div>
+                                <label class="block text-xs text-zinc-500 font-bold mb-1">Тип</label>
+                                <select id="in-em-type" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2.5 text-white text-sm outline-none">
+                                    <option value="Манхва">Манхва</option>
+                                    <option value="Манга">Манга</option>
+                                    <option value="Маньхуа">Маньхуа</option>
+                                    <option value="Руманга">Руманга</option>
+                                    <option value="Комикс">Комикс</option>
+                                    <option value="OEL-манга">OEL-манга</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs text-zinc-500 font-bold mb-1">Год релиза</label>
+                                <input type="number" id="in-em-year" placeholder="2023" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2.5 text-white text-sm outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-zinc-500 font-bold mb-1">Статус тайтла</label>
+                                <select id="in-em-status" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2.5 text-white text-sm outline-none">
+                                    <option value="продолжается">продолжается</option>
+                                    <option value="завершён">завершён</option>
+                                    <option value="анонс">анонс</option>
+                                    <option value="заморожен">заморожен</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs text-zinc-500 font-bold mb-1">Возраст</label>
+                                <select id="in-em-age" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2.5 text-white text-sm outline-none">
+                                    <option value="Нет">Нет</option>
+                                    <option value="16+">16+</option>
+                                    <option value="18+">18+</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-zinc-950/50 border border-zinc-800/80 p-5 rounded-2xl shadow-inner">
+                        <h4 class="text-primary-500 font-black text-xs uppercase tracking-widest mb-4 border-b border-zinc-800 pb-2">Дополнительные данные</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div><label class="block text-xs text-zinc-500 font-bold mb-1">Перевод (статус)</label><input type="text" id="in-em-d-trans" placeholder="Продолжается" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2.5 text-white text-sm outline-none"></div>
+                            <div><label class="block text-xs text-zinc-500 font-bold mb-1">Страна</label><input type="text" id="in-em-d-country" placeholder="🇰🇷 Корея" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2.5 text-white text-sm outline-none"></div>
+                            <div><label class="block text-xs text-zinc-500 font-bold mb-1">Томов/Выпуск</label><input type="text" id="in-em-d-volumes" placeholder="4, выпуск завершен" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2.5 text-white text-sm outline-none"></div>
+                            <div><label class="block text-xs text-zinc-500 font-bold mb-1">Формат выпуска</label><input type="text" id="in-em-d-format" placeholder="Веб, В цвете" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2.5 text-white text-sm outline-none"></div>
+                            <div><label class="block text-xs text-zinc-500 font-bold mb-1">Автор(ы)</label><input type="text" id="in-em-d-author" placeholder="Имя автора" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2.5 text-white text-sm outline-none"></div>
+                            <div><label class="block text-xs text-zinc-500 font-bold mb-1">Издательство</label><input type="text" id="in-em-d-pub" placeholder="Название издательства" class="w-full bg-zinc-900 border border-zinc-700 rounded-lg p-2.5 text-white text-sm outline-none"></div>
+                        </div>
+                    </div>
+
+                    <div class="bg-zinc-950/50 border border-zinc-800/80 p-5 rounded-2xl shadow-inner">
+                        <h4 class="text-primary-500 font-black text-xs uppercase tracking-widest mb-1">Команды переводчиков</h4>
+                        <p class="text-[10px] text-zinc-500 mb-4 font-bold">Каждый с новой строки: <b>Имя | Подписчики | URL_Аватарки</b></p>
+                        <textarea id="in-em-translators" rows="3" placeholder="demantur | 1868 подписчиков | https://...&#10;Bao Inc. | 22383 подписчика | https://..." class="w-full bg-zinc-900 border border-zinc-700 rounded-xl p-4 text-white text-sm outline-none focus:border-primary-500 resize-none custom-scrollbar whitespace-pre"></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-black text-primary-400 uppercase tracking-widest mb-3"><i class="fa-solid fa-masks-theater mr-1"></i> Жанры</label>
+                        <div id="em-genres-container" class="flex flex-wrap gap-2 p-1"></div>
                     </div>
                     <div>
-                        <label class="block text-xs font-black text-zinc-400 uppercase tracking-widest mb-2">Обложка (URL картинки)</label>
-                        <input type="url" id="in-cover" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-4 text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none smooth-transition" placeholder="https://...">
+                        <label class="block text-xs font-black text-blue-400 uppercase tracking-widest mb-3"><i class="fa-solid fa-tags mr-1"></i> Теги</label>
+                        <div id="em-tags-container" class="flex flex-wrap gap-2 p-1"></div>
                     </div>
-                </div>
-                
-                <div>
-                    <label class="block text-xs font-black text-zinc-400 uppercase tracking-widest mb-2">Сюжет / Описание</label>
-                    <textarea id="in-desc" rows="3" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-4 text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none resize-none smooth-transition custom-scrollbar" placeholder="Краткое описание..."></textarea>
-                </div>
 
-                <!-- Блок выбора Жанров -->
-                <div>
-                    <label class="block text-xs font-black text-primary-400 uppercase tracking-widest mb-2"><i class="fa-solid fa-masks-theater mr-1"></i> Выберите жанры</label>
-                    <div id="form-genres-container" class="flex flex-wrap gap-2">
-                        <!-- Кнопки жанров генерируются JS -->
-                    </div>
-                </div>
-
-                <!-- Блок выбора Тегов -->
-                <div>
-                    <label class="block text-xs font-black text-blue-400 uppercase tracking-widest mb-2"><i class="fa-solid fa-tags mr-1"></i> Выберите теги</label>
-                    <div id="form-tags-container" class="flex flex-wrap gap-2">
-                        <!-- Кнопки тегов генерируются JS -->
-                    </div>
-                </div>
-
-                <button type="submit" id="btn-submit-manga" class="w-full bg-primary-600 hover:bg-primary-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-primary-600/30 active:scale-95 smooth-transition mt-4">Опубликовать в каталог</button>
-            </form>
+                    <button type="submit" id="btn-em-hidden-submit" class="hidden"></button>
+                </form>
+            </div>
+            <div class="p-4 sm:p-6 border-t border-zinc-800/80 shrink-0 bg-zinc-900 flex gap-3 z-10">
+                <button type="button" onclick="document.getElementById('btn-em-hidden-submit').click()" id="btn-submit-manga" class="flex-1 bg-primary-600 hover:bg-primary-500 text-white font-black py-4 rounded-xl shadow-lg shadow-primary-600/30 smooth-transition active:scale-95">Сохранить</button>
+            </div>
         </div>
     </div>
 
-    <!-- Добавить Главу -->
+    <!-- ДОБАВЛЕНИЕ ГЛАВЫ / ТОМА -->
     <div id="modal-add-chapter" class="fixed inset-0 bg-black/80 backdrop-blur-md z-[100] flex items-center justify-center p-4 opacity-0 invisible pointer-events-none smooth-transition">
         <div class="bg-zinc-900 border border-zinc-800 w-full max-w-md rounded-[2rem] p-6 sm:p-8 shadow-2xl transform scale-95 translate-y-10 smooth-transition">
             <div class="flex justify-between items-center mb-6">
                 <h3 class="text-2xl font-black text-white">Новая глава</h3>
-                <button onclick="window.hideModal('modal-add-chapter')" class="text-zinc-500 hover:text-white bg-zinc-800/50 hover:bg-zinc-800 w-10 h-10 rounded-full smooth-transition active:scale-90"><i class="fa-solid fa-xmark"></i></button>
+                <button type="button" onclick="window.hideModal('modal-add-chapter')" class="text-zinc-500 hover:text-white bg-zinc-800/50 hover:bg-zinc-800 w-10 h-10 rounded-full flex items-center justify-center smooth-transition active:scale-90"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <form id="form-add-chapter" onsubmit="window.submitChapter(event)" class="space-y-5">
+            <form onsubmit="window.submitChapter(event)" class="space-y-5">
                 <div>
-                    <label class="block text-xs font-black text-zinc-400 uppercase tracking-widest mb-2">Название главы</label>
-                    <input type="text" id="in-chap-title" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-4 text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none smooth-transition" placeholder="Глава 1">
+                    <label class="block text-xs font-black text-zinc-400 uppercase tracking-widest mb-2">Название главы *</label>
+                    <input type="text" id="in-chap-title" required class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-4 text-white outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500" placeholder="Например: Глава 1">
+                </div>
+                <!-- ДОБАВЛЕНО ПОЛЕ ДЛЯ ТОМА -->
+                <div>
+                    <label class="block text-xs font-black text-zinc-400 uppercase tracking-widest mb-2">Том (необязательно)</label>
+                    <input type="text" id="in-chap-volume" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-4 text-white outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500" placeholder="Например: Том 1">
+                    <p class="text-[10px] text-zinc-500 mt-1 font-bold">Укажите том, чтобы сгруппировать главы в аккордеон.</p>
                 </div>
                 <div>
-                    <label class="block text-xs font-black text-zinc-400 uppercase tracking-widest mb-2">Ссылки на картинки (каждая с новой строки)</label>
-                    <textarea id="in-chap-urls" required rows="6" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-4 text-white text-xs whitespace-pre focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none custom-scrollbar smooth-transition" placeholder="https://raw.githubusercontent.com/.../img1.jpg&#10;https://.../img2.jpg"></textarea>
+                    <label class="block text-xs font-black text-zinc-400 uppercase tracking-widest mb-2">Ссылки на картинки *</label>
+                    <textarea id="in-chap-urls" required rows="5" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-4 text-white text-xs whitespace-pre outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 custom-scrollbar resize-none" placeholder="https://.../img1.jpg&#10;https://.../img2.jpg"></textarea>
                 </div>
                 <button type="submit" id="btn-submit-chapter" class="w-full bg-primary-600 hover:bg-primary-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-primary-600/30 active:scale-95 smooth-transition mt-2">Загрузить в базу</button>
             </form>
@@ -401,7 +589,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, deleteDoc, doc, updateDoc, onSnapshot, initializeFirestore, persistentLocalCache, query, limit } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCz1zBOWTXWZHnUjzQq2-Tsh20df-O_qb4",
@@ -411,258 +599,187 @@
             messagingSenderId: "415476811249",
             appId: "1:415476811249:web:4c1169537a0d2491833050"
         };
+        const ADMIN_PIN = "739184";
 
-        const appIdStr = 'mangaweb-ee8fc'; 
-        const ADMIN_PIN = "1234";
-
-        let dbRef = null;
-        let authRef = null;
-        let user = null;
-        
-        let dbMangas = [];
-        let dbChapters = [];
+        let dbRef = null; let authRef = null; let user = null;
+        let dbMangas = []; let dbChapters = []; let dbRatings = []; let dbComments = [];
         let favoriteIds = [];
         
         let currentTab = 'catalog';
-        let currentMangaId = null;
-        let currentChapIdx = null;
+        let currentMangaId = null; let currentChapId = null; let currentChapIdx = null;
         let isUiHidden = false;
         
-        // --- БАЗА ЖАНРОВ И ТЕГОВ ---
-        // Ты можешь заменить ссылки img на свои собственные картинки!
+        let emGenres = []; let emTags = []; let emMode = 'add';
+        
+        // ВАШИ ЖАНРЫ
         const GENRES = [
-            { id: 'shonen', name: 'Сёнэн', img: 'https://images.unsplash.com/photo-1612036782180-6f0b6ce846ce?auto=format&fit=crop&w=400&q=80' },
-            { id: 'fantasy', name: 'Фэнтези', img: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=400&q=80' },
-            { id: 'romance', name: 'Романтика', img: 'https://images.unsplash.com/photo-1518199266791-5375a83164ba?auto=format&fit=crop&w=400&q=80' },
-            { id: 'isekai', name: 'Исекай', img: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=400&q=80' },
-            { id: 'action', name: 'Боевик', img: 'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?auto=format&fit=crop&w=400&q=80' },
-            { id: 'comedy', name: 'Комедия', img: 'https://images.unsplash.com/photo-1545696563-aafbc2385317?auto=format&fit=crop&w=400&q=80' },
-            { id: 'drama', name: 'Драма', img: 'https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=400&q=80' },
-            { id: 'slice', name: 'Повседневность', img: 'https://images.unsplash.com/photo-1494548162494-384bba4ab999?auto=format&fit=crop&w=400&q=80' }
+            { id: 'shonen', name: 'Сёнэн', img: 'https://raw.githubusercontent.com/eleusin12345-web/67/refs/heads/main/img_1786597631473_8rs125_1000061704.jpg' },
+            { id: 'shojo', name: 'Сёдзё', img: 'https://raw.githubusercontent.com/eleusin12345-web/67/refs/heads/main/img_1786598404947_09m94b_1000061705.webp' },
+            { id: 'seinen', name: 'Сэйнэн', img: 'https://raw.githubusercontent.com/eleusin12345-web/67/refs/heads/main/img_1786598407775_fzryya_1000061720.jpg' },
+            { id: 'fantasy', name: 'Фэнтези', img: 'https://raw.githubusercontent.com/eleusin12345-web/67/refs/heads/main/img_1786598409898_2vxsir_1000061706.jpg' },
+            { id: 'romance', name: 'Романтика', img: 'https://raw.githubusercontent.com/eleusin12345-web/67/refs/heads/main/img_1786598412980_9ntn0a_1000061707.jpg' },
+            { id: 'isekai', name: 'Исекай', img: 'https://raw.githubusercontent.com/eleusin12345-web/67/refs/heads/main/img_1786598415516_54f751_1000061708.webp' },
+            { id: 'action', name: 'Боевик', img: 'https://raw.githubusercontent.com/eleusin12345-web/67/refs/heads/main/img_1786598418564_sjaslx_1000061709.jpg' },
+            { id: 'comedy', name: 'Комедия', img: 'https://raw.githubusercontent.com/eleusin12345-web/67/refs/heads/main/img_1786598420854_felgmd_1000061710.jpg' },
+            { id: 'drama', name: 'Драма', img: 'https://raw.githubusercontent.com/eleusin12345-web/67/refs/heads/main/img_1786598422940_r742oy_1000061711.webp' },
+            { id: 'slice', name: 'Повседневность', img: 'https://raw.githubusercontent.com/eleusin12345-web/67/refs/heads/main/img_1786598425207_253rhp_1000061712.jpg' },
+            { id: 'mecha', name: 'Меха', img: 'https://raw.githubusercontent.com/eleusin12345-web/67/refs/heads/main/img_1786598427499_p5ebv4_1000061713.jpg' },
+            { id: 'thriller', name: 'Триллер', img: 'https://raw.githubusercontent.com/eleusin12345-web/67/refs/heads/main/img_1786598429648_tgfof6_1000061714.jpg' },
+            { id: 'horror', name: 'Ужасы', img: 'https://raw.githubusercontent.com/eleusin12345-web/67/refs/heads/main/img_1786598431591_5eii0j_1000061715.jpg' },
+            { id: 'sports', name: 'Спорт', img: 'https://raw.githubusercontent.com/eleusin12345-web/67/refs/heads/main/img_1786598433706_j970o2_1000061716.jpg' },
+            { id: 'school', name: 'Школа', img: 'https://raw.githubusercontent.com/eleusin12345-web/67/refs/heads/main/img_1786598435704_tqc91n_1000061719.png' },
+            { id: 'history', name: 'Исторический', img: 'https://raw.githubusercontent.com/eleusin12345-web/67/refs/heads/main/img_1786598438354_g3dqv6_1000061718.jpg' }
         ];
 
         const TAGS = [
-            'ГГ имба', 'Магия', 'Перерождение', 'Монстры', 'Академия', 
-            'Система', 'Подземелья', 'Выживание', 'Умный ГГ', 'Месть', 
-            'Культивация', 'Демоны', 'Боги', 'Геймер', 'Злодей', 'Возвращение'
+            'ГГ имба', 'Магия', 'Перерождение', 'Монстры', 'Академия', 'Система', 'Подземелья', 'Выживание', 'Умный ГГ', 'Месть', 
+            'Культивация', 'Демоны', 'Боги', 'Геймер', 'Злодей', 'Возвращение', 'Алхимия', 'Антигерой', 'Артефакты', 'Бессмертие', 
+            'Боевые искусства', 'Вампиры', 'Виртуальная реальность', 'ГГ женщина', 'ГГ мужчина', 'Жестокий мир', 'Зомби', 'Игры', 
+            'Империя', 'Космос', 'Мутанты', 'Навыки', 'Наемники', 'Нежить', 'Ниндзя', 'Политика', 'Предательство', 'Путешествие во времени', 
+            'Роботы', 'Самураи', 'Скрытие личности', 'Эльфы', 'Яой', 'Юри', 'Эротика', 'Психология'
         ];
 
-        let selectedGenresForm = [];
-        let selectedTagsForm = [];
-        let currentFilterType = null;
-        let currentFilterValue = null;
-
+        let currentFilterType = null; let currentFilterValue = null;
         window.isAdmin = localStorage.getItem('MW_IS_ADMIN') === 'true';
 
-        // --- ИНИЦИАЛИЗАЦИЯ ---
         async function initApp() {
             loadFavorites();
             checkAdminStatus();
             renderGenresAndTagsPages();
-            
             try {
                 const app = initializeApp(firebaseConfig);
-                authRef = getAuth(app);
-                dbRef = getFirestore(app);
-
-                try { await signInAnonymously(authRef); } 
-                catch (authError) { setNetStatus('online', 'Подключено'); listenData(); }
-
-                onAuthStateChanged(authRef, (u) => {
-                    user = u;
-                    if (user) { setNetStatus('online', 'Онлайн'); listenData(); }
+                authRef = getAuth(app); 
+                
+                // Включаем оффлайн-кеш правильно
+                dbRef = initializeFirestore(app, {
+                    localCache: persistentLocalCache()
                 });
-            } catch (err) { setNetStatus('error', 'Ошибка сети'); }
+                
+                // Исправление зависания: Сначала делаем анонимный вход, 
+                // чтобы правила безопасности разрешили читать данные
+                try { 
+                    await signInAnonymously(authRef); 
+                } catch (authError) { 
+                    console.log("Auth skipped");
+                }
+
+                onAuthStateChanged(authRef, (u) => { 
+                    user = u; 
+                    setNetStatus('online', 'Онлайн'); 
+                    listenData(); 
+                });
+            } catch (err) { 
+                setNetStatus('error', 'Ошибка сети'); 
+            }
         }
 
         function setNetStatus(type, text) {
-            const dot = document.getElementById('status-dot');
-            document.getElementById('status-text').textContent = text;
+            const dot = document.getElementById('status-dot'); document.getElementById('status-text').textContent = text;
             dot.className = 'w-2 h-2 rounded-full ' + (type === 'online' ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]' : type === 'error' ? 'bg-red-500' : 'bg-amber-500 animate-pulse');
         }
 
         function listenData() {
             if (!dbRef) return;
-            onSnapshot(collection(dbRef, 'artifacts', appIdStr, 'public', 'data', 'mangas'), (snap) => {
-                dbMangas = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a,b) => b.createdAt - a.createdAt);
-                refreshUI();
+            
+            // Твоя старая база данных + Оптимизация (Limit)
+            onSnapshot(query(collection(dbRef, 'mangas'), limit(100)), (snap) => {
+                dbMangas = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a,b) => b.createdAt - a.createdAt); refreshUI();
+            }, (error) => {
+                console.error("Firestore error mangas:", error);
+                setNetStatus('error', 'Ошибка доступа к БД');
             });
-            onSnapshot(collection(dbRef, 'artifacts', appIdStr, 'public', 'data', 'chapters'), (snap) => {
-                dbChapters = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a,b) => b.createdAt - a.createdAt);
-                refreshUI();
+
+            onSnapshot(query(collection(dbRef, 'chapters'), limit(300)), (snap) => {
+                dbChapters = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a,b) => b.createdAt - a.createdAt); refreshUI();
+            });
+
+            onSnapshot(query(collection(dbRef, 'ratings'), limit(500)), (snap) => {
+                dbRatings = snap.docs.map(d => ({ id: d.id, ...d.data() })); refreshUI();
+            });
+
+            onSnapshot(query(collection(dbRef, 'comments'), limit(500)), (snap) => {
+                dbComments = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a,b) => b.createdAt - a.createdAt); 
+                if (!document.getElementById('view-reader').classList.contains('hidden') && currentChapId) window.renderComments();
+                if (!document.getElementById('view-details').classList.contains('hidden') && currentMangaId) window.renderMangaComments();
             });
         }
 
-        // --- УПРАВЛЕНИЕ ВИДАМИ (СЕКЦИЯМИ) ---
-        function hideAllViews() {
-            document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
-        }
-
+        function hideAllViews() { document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden')); }
         function refreshUI() {
             if (!document.getElementById('view-home').classList.contains('hidden')) window.switchTab(currentTab);
             if (!document.getElementById('view-details').classList.contains('hidden') && currentMangaId) renderDetails(currentMangaId);
             if (!document.getElementById('view-filtered').classList.contains('hidden')) renderFilteredData();
         }
 
-        // --- ГЕНЕРАЦИЯ СТРАНИЦ ЖАНРОВ И ТЕГОВ ---
         function renderGenresAndTagsPages() {
-            // Жанры (Страница)
             const gGrid = document.getElementById('genres-grid');
-            GENRES.forEach(g => {
-                const card = document.createElement('div');
-                card.className = 'card-hover relative h-28 sm:h-32 rounded-2xl overflow-hidden cursor-pointer group shadow-lg';
-                card.onclick = () => window.filterBy('genre', g.name);
-                card.innerHTML = `
-                    <img src="${g.img}" class="absolute inset-0 w-full h-full object-cover smooth-transition group-hover:scale-110">
-                    <div class="absolute inset-0 bg-black/50 group-hover:bg-black/30 smooth-transition"></div>
-                    <div class="absolute inset-0 flex items-center justify-center p-2 text-center">
-                        <span class="font-black text-white text-lg sm:text-xl drop-shadow-lg tracking-wide">${g.name}</span>
-                    </div>`;
-                gGrid.appendChild(card);
-            });
-
-            // Теги (Страница)
+            if (gGrid && gGrid.children.length === 0) {
+                GENRES.forEach(g => {
+                    const card = document.createElement('div');
+                    card.className = 'card-hover relative h-28 sm:h-32 rounded-2xl overflow-hidden cursor-pointer group shadow-lg';
+                    card.onclick = () => window.filterBy('genre', g.name);
+                    card.innerHTML = `<img src="${g.img}" class="absolute inset-0 w-full h-full object-cover smooth-transition group-hover:scale-110"><div class="absolute inset-0 bg-black/50 group-hover:bg-black/30 smooth-transition"></div><div class="absolute inset-0 flex items-center justify-center p-2 text-center"><span class="font-black text-white text-lg sm:text-xl drop-shadow-lg tracking-wide">${g.name}</span></div>`;
+                    gGrid.appendChild(card);
+                });
+            }
             const tCloud = document.getElementById('tags-cloud');
-            TAGS.forEach(t => {
-                const badge = document.createElement('button');
-                badge.className = 'bg-zinc-900 border border-zinc-700/50 hover:bg-zinc-800 hover:border-blue-500/50 text-zinc-300 hover:text-white px-4 py-2 rounded-xl text-sm font-bold smooth-transition active:scale-95 shadow-sm';
-                badge.textContent = '# ' + t;
-                badge.onclick = () => window.filterBy('tag', t);
-                tCloud.appendChild(badge);
-            });
+            if (tCloud && tCloud.children.length === 0) {
+                TAGS.forEach(t => {
+                    const badge = document.createElement('button');
+                    badge.className = 'bg-zinc-900 border border-zinc-700/50 hover:bg-zinc-800 hover:border-blue-500/50 text-zinc-300 hover:text-white px-4 py-2 rounded-xl text-sm font-bold smooth-transition active:scale-95 shadow-sm';
+                    badge.textContent = '# ' + t; badge.onclick = () => window.filterBy('tag', t); tCloud.appendChild(badge);
+                });
+            }
         }
 
-        // --- ФИЛЬТРАЦИЯ (Поиск по Жанру/Тегу) ---
         window.filterBy = function(type, value) {
-            currentFilterType = type;
-            currentFilterValue = value;
-            
-            hideAllViews();
-            document.getElementById('view-filtered').classList.remove('hidden');
-            document.body.classList.remove('no-scroll');
-            window.scrollTo({ top: 0, behavior: 'instant' });
-            
+            currentFilterType = type; currentFilterValue = value;
+            hideAllViews(); document.getElementById('view-filtered').classList.remove('hidden'); document.body.classList.remove('no-scroll'); window.scrollTo({ top: 0, behavior: 'instant' });
             const titleEl = document.getElementById('filtered-title');
-            if(type === 'genre') {
-                titleEl.innerHTML = `<i class="fa-solid fa-masks-theater text-primary-500"></i> Жанр: ${value}`;
-            } else {
-                titleEl.innerHTML = `<i class="fa-solid fa-tags text-blue-500"></i> Тег: ${value}`;
-            }
-            
+            if(type === 'genre') titleEl.innerHTML = `<i class="fa-solid fa-masks-theater text-primary-500 mr-2"></i> Жанр: ${value}`;
+            else titleEl.innerHTML = `<i class="fa-solid fa-tags text-blue-500 mr-2"></i> Тег: ${value}`;
             renderFilteredData();
         }
 
         function renderFilteredData() {
-            const grid = document.getElementById('filtered-grid');
-            const empty = document.getElementById('filtered-empty');
-            grid.innerHTML = '';
-            grid.classList.add('hidden');
-            empty.classList.add('hidden');
-
+            const grid = document.getElementById('filtered-grid'); const empty = document.getElementById('filtered-empty');
+            grid.innerHTML = ''; grid.classList.add('hidden'); empty.classList.add('hidden');
             let filtered = [];
-            if (currentFilterType === 'genre') {
-                filtered = dbMangas.filter(m => m.genres && m.genres.includes(currentFilterValue));
-            } else if (currentFilterType === 'tag') {
-                filtered = dbMangas.filter(m => m.tags && m.tags.includes(currentFilterValue));
-            }
-
-            if(filtered.length === 0) {
-                empty.classList.remove('hidden');
-            } else {
-                grid.classList.remove('hidden');
-                renderGrid(filtered, grid, empty);
-            }
+            if (currentFilterType === 'genre') filtered = dbMangas.filter(m => m.genres && m.genres.includes(currentFilterValue));
+            else if (currentFilterType === 'tag') filtered = dbMangas.filter(m => m.tags && m.tags.includes(currentFilterValue));
+            
+            if(filtered.length === 0) empty.classList.remove('hidden');
+            else { grid.classList.remove('hidden'); renderGrid(filtered, grid, empty); }
         }
 
-        window.goBackToFilters = function() {
-            hideAllViews();
-            if(currentFilterType === 'genre') document.getElementById('view-genres').classList.remove('hidden');
-            else document.getElementById('view-tags').classList.remove('hidden');
-        }
-
+        window.goBackToFilters = function() { hideAllViews(); if(currentFilterType === 'genre') document.getElementById('view-genres').classList.remove('hidden'); else document.getElementById('view-tags').classList.remove('hidden'); }
         window.openGenres = function() { hideAllViews(); document.getElementById('view-genres').classList.remove('hidden'); window.scrollTo({ top: 0 }); }
         window.openTags = function() { hideAllViews(); document.getElementById('view-tags').classList.remove('hidden'); window.scrollTo({ top: 0 }); }
-
-        // --- ФОРМА ДОБАВЛЕНИЯ (Жанры и Теги) ---
-        window.openAddMangaModal = function() {
-            selectedGenresForm = [];
-            selectedTagsForm = [];
-            renderFormBadges();
-            window.showModal('modal-add-manga');
-        }
-
-        function renderFormBadges() {
-            const gCont = document.getElementById('form-genres-container');
-            gCont.innerHTML = '';
-            GENRES.forEach(g => {
-                const btn = document.createElement('div');
-                const isActive = selectedGenresForm.includes(g.name);
-                btn.className = `badge-selectable text-xs font-bold px-3 py-1.5 rounded-lg border ${isActive ? 'badge-active' : 'bg-zinc-900 border-zinc-700 text-zinc-400'}`;
-                btn.textContent = g.name;
-                btn.onclick = () => {
-                    if(isActive) selectedGenresForm = selectedGenresForm.filter(x => x !== g.name);
-                    else selectedGenresForm.push(g.name);
-                    renderFormBadges();
-                };
-                gCont.appendChild(btn);
-            });
-
-            const tCont = document.getElementById('form-tags-container');
-            tCont.innerHTML = '';
-            TAGS.forEach(t => {
-                const btn = document.createElement('div');
-                const isActive = selectedTagsForm.includes(t);
-                btn.className = `badge-selectable text-xs font-bold px-3 py-1.5 rounded-lg border ${isActive ? 'bg-blue-600 text-white border-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.5)]' : 'bg-zinc-900 border-zinc-700 text-zinc-400'}`;
-                btn.textContent = t;
-                btn.onclick = () => {
-                    if(isActive) selectedTagsForm = selectedTagsForm.filter(x => x !== t);
-                    else selectedTagsForm.push(t);
-                    renderFormBadges();
-                };
-                tCont.appendChild(btn);
-            });
-        }
-
-        // --- НАВИГАЦИЯ И ВКЛАДКИ (ГЛАВНАЯ) ---
-        window.goHome = function() {
-            hideAllViews();
-            document.getElementById('view-home').classList.remove('hidden');
-            document.body.classList.remove('no-scroll'); 
-            window.scrollTo({ top: 0, behavior: 'instant' });
-            window.switchTab(currentTab);
+        window.goHome = function() { hideAllViews(); document.getElementById('view-home').classList.remove('hidden'); document.body.classList.remove('no-scroll'); window.scrollTo({ top: 0, behavior: 'instant' }); window.switchTab(currentTab); }
+        window.comingSoon = function() { window.toggleDrawer(); showToast('Раздел в разработке 🚀', 'fa-rocket'); }
+        window.randomManga = function() {
+            if (dbMangas.length === 0) { showToast('Каталог пока пуст!', 'fa-box-open'); return; }
+            const randomIndex = Math.floor(Math.random() * dbMangas.length);
+            window.toggleDrawer(); window.openMangaDetails(dbMangas[randomIndex].id); showToast('Удачного чтения! 🎲', 'fa-dice');
         }
 
         window.switchTab = function(tabId) {
             currentTab = tabId;
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('border-primary-500', 'text-white');
-                btn.classList.add('border-transparent', 'text-zinc-500');
-            });
-            const activeBtn = document.getElementById(`tab-${tabId}`);
-            if(activeBtn) { activeBtn.classList.remove('border-transparent', 'text-zinc-500'); activeBtn.classList.add('border-primary-500', 'text-white'); }
-
+            document.querySelectorAll('.tab-btn').forEach(btn => { btn.classList.remove('border-primary-500', 'text-white'); btn.classList.add('border-transparent', 'text-zinc-500'); });
+            const activeBtn = document.getElementById(`tab-${tabId}`); if(activeBtn) { activeBtn.classList.remove('border-transparent', 'text-zinc-500'); activeBtn.classList.add('border-primary-500', 'text-white'); }
             const grid = document.getElementById('grid-container'); const latest = document.getElementById('latest-container'); const empty = document.getElementById('empty-state');
             grid.innerHTML = ''; latest.innerHTML = ''; grid.classList.add('hidden'); latest.classList.add('hidden'); empty.classList.add('hidden');
-
             let items = [];
             if (tabId === 'catalog') { items = dbMangas; grid.classList.remove('hidden'); renderGrid(items, grid, empty); } 
             else if (tabId === 'favorites') { items = dbMangas.filter(m => favoriteIds.includes(m.id)); grid.classList.remove('hidden'); renderGrid(items, grid, empty); } 
             else if (tabId === 'latest') {
-                latest.classList.remove('hidden');
-                const recentChaps = [...dbChapters].sort((a,b) => b.createdAt - a.createdAt).slice(0, 30);
+                latest.classList.remove('hidden'); const recentChaps = [...dbChapters].sort((a,b) => b.createdAt - a.createdAt).slice(0, 30);
                 if (recentChaps.length === 0) empty.classList.remove('hidden');
                 else {
                     recentChaps.forEach(chap => {
                         const manga = dbMangas.find(m => m.id === chap.mangaId); if (!manga) return;
-                        const el = document.createElement('div');
-                        el.className = 'flex items-center gap-4 bg-zinc-900/60 hover:bg-zinc-800 p-3 rounded-2xl border border-zinc-800/80 cursor-pointer card-hover smooth-transition';
-                        el.onclick = () => window.openMangaDetails(manga.id);
-                        el.innerHTML = `
-                            <img src="${manga.cover}" class="w-16 h-16 rounded-xl object-cover bg-zinc-950 shadow-md border border-zinc-800">
-                            <div class="flex-1 min-w-0">
-                                <h4 class="font-black text-white text-sm truncate leading-tight">${manga.title}</h4>
-                                <p class="text-primary-400 font-bold text-xs truncate mt-1 bg-primary-900/30 px-2 py-0.5 rounded-md inline-block">${chap.title}</p>
-                            </div>`;
+                        const el = document.createElement('div'); el.className = 'flex items-center gap-4 bg-zinc-900/60 hover:bg-zinc-800 p-3 rounded-2xl border border-zinc-800/80 cursor-pointer card-hover smooth-transition'; el.onclick = () => window.openMangaDetails(manga.id);
+                        el.innerHTML = `<img src="${manga.cover}" class="w-16 h-16 rounded-xl object-cover bg-zinc-950 shadow-md border border-zinc-800"><div class="flex-1 min-w-0"><h4 class="font-black text-white text-sm truncate leading-tight">${manga.title}</h4><p class="text-primary-400 font-bold text-xs truncate mt-1 bg-primary-900/30 px-2 py-0.5 rounded-md inline-block">${chap.title}</p></div>`;
                         latest.appendChild(el);
                     });
                 }
@@ -673,12 +790,18 @@
             if (arr.length === 0) { emptyEl.classList.remove('hidden'); return; }
             arr.forEach(manga => {
                 const chaps = dbChapters.filter(c => c.mangaId === manga.id); const lastChap = chaps.length > 0 ? chaps[0].title : 'Нет глав';
-                const card = document.createElement('div');
-                card.className = 'card-hover bg-zinc-900 border border-zinc-800/80 rounded-2xl overflow-hidden cursor-pointer relative shadow-lg group flex flex-col';
-                card.onclick = () => window.openMangaDetails(manga.id);
+                const mRatings = dbRatings.filter(r => r.mangaId === manga.id);
+                const avgScore = mRatings.length > 0 ? (mRatings.reduce((sum, r) => sum + r.score, 0) / mRatings.length).toFixed(1) : '0.0';
+
+                const card = document.createElement('div'); card.className = 'card-hover bg-zinc-900 border border-zinc-800/80 rounded-2xl overflow-hidden cursor-pointer relative shadow-lg group flex flex-col'; card.onclick = () => window.openMangaDetails(manga.id);
                 card.innerHTML = `
                     <div class="pt-[140%] relative bg-zinc-950 w-full overflow-hidden">
                         <img src="${manga.cover}" class="absolute inset-0 w-full h-full object-cover smooth-transition group-hover:scale-110 group-hover:opacity-80" onerror="this.src='https://via.placeholder.com/300x450/18181b/ffffff?text=Нет+обложки'">
+                        <div class="absolute top-2 left-2 bg-black/80 backdrop-blur-md px-2 py-1 rounded-lg flex items-center gap-1 border border-zinc-700/50 z-20">
+                            <i class="fa-solid fa-star text-yellow-500 text-[10px]"></i>
+                            <span class="text-white text-xs font-black drop-shadow-md">${avgScore}</span>
+                        </div>
+                        ${manga.type ? `<div class="absolute bottom-2 right-2 bg-primary-600/90 backdrop-blur-md text-white px-2 py-0.5 rounded-md text-[10px] font-black z-20 shadow-lg border border-primary-500/50">${manga.type}</div>` : ''}
                         <div class="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/40 to-transparent opacity-80 group-hover:opacity-100 smooth-transition"></div>
                     </div>
                     <div class="p-4 absolute bottom-0 left-0 right-0 z-10 transform smooth-transition group-hover:-translate-y-1">
@@ -689,169 +812,487 @@
             });
         }
 
-        // --- ДЕТАЛИ ---
-        window.openMangaDetails = function(id) {
-            currentMangaId = id;
-            hideAllViews();
-            document.getElementById('view-details').classList.remove('hidden');
-            document.body.classList.remove('no-scroll');
-            window.scrollTo({ top: 0, behavior: 'instant' });
-            renderDetails(id);
+        // ================= УПРАВЛЕНИЕ МАНГОЙ (АДМИН) =================
+        
+        window.openAddMangaModal = function() { 
+            emMode = 'add'; currentMangaId = null;
+            document.getElementById('edit-manga-modal-title').textContent = "Новый тайтл"; document.getElementById('form-edit-manga').reset();
+            emGenres = []; emTags = []; renderEditMangaBadges(); window.showModal('modal-edit-manga'); 
+        }
+
+        window.openEditMangaInfoModal = function() {
+            if(!currentMangaId) return;
+            const m = dbMangas.find(x => x.id === currentMangaId); if(!m) return;
+            
+            emMode = 'edit';
+            document.getElementById('edit-manga-modal-title').textContent = "Редактор тайтла";
+            
+            document.getElementById('in-em-title').value = m.title || '';
+            document.getElementById('in-em-cover').value = m.cover || '';
+            document.getElementById('in-em-desc').value = m.desc || '';
+            document.getElementById('in-em-type').value = m.type || 'Манхва';
+            document.getElementById('in-em-year').value = m.year || '';
+            document.getElementById('in-em-status').value = m.status || 'продолжается';
+            document.getElementById('in-em-age').value = m.ageRating || 'Нет';
+            
+            if (m.additionalData) {
+                document.getElementById('in-em-d-trans').value = m.additionalData.translationStatus || '';
+                document.getElementById('in-em-d-country').value = m.additionalData.country || '';
+                document.getElementById('in-em-d-volumes').value = m.additionalData.volumes || '';
+                document.getElementById('in-em-d-format').value = m.additionalData.format || '';
+                document.getElementById('in-em-d-author').value = m.additionalData.author || '';
+                document.getElementById('in-em-d-pub').value = m.additionalData.publisher || '';
+            } else {
+                ['trans','country','volumes','format','author','pub'].forEach(id => document.getElementById(`in-em-d-${id}`).value = '');
+            }
+
+            if (m.translators && Array.isArray(m.translators)) {
+                document.getElementById('in-em-translators').value = m.translators.map(t => `${t.name} | ${t.followers} | ${t.avatar}`).join('\n');
+            } else { document.getElementById('in-em-translators').value = ''; }
+
+            emGenres = m.genres ? [...m.genres] : []; emTags = m.tags ? [...m.tags] : [];
+            renderEditMangaBadges(); window.showModal('modal-edit-manga');
+        }
+
+        function renderEditMangaBadges() {
+            const gCont = document.getElementById('em-genres-container'); gCont.innerHTML = '';
+            GENRES.forEach(g => {
+                const btn = document.createElement('div'); const isActive = emGenres.includes(g.name);
+                btn.className = `badge-selectable text-xs font-bold px-3 py-1.5 rounded-lg border ${isActive ? 'badge-active' : 'bg-zinc-900 border-zinc-700 text-zinc-400'}`;
+                btn.textContent = g.name;
+                btn.onclick = () => { if(isActive) emGenres = emGenres.filter(x => x !== g.name); else emGenres.push(g.name); renderEditMangaBadges(); };
+                gCont.appendChild(btn);
+            });
+            const tCont = document.getElementById('em-tags-container'); tCont.innerHTML = '';
+            TAGS.forEach(t => {
+                const btn = document.createElement('div'); const isActive = emTags.includes(t);
+                btn.className = `badge-selectable text-xs font-bold px-3 py-1.5 rounded-lg border ${isActive ? 'bg-blue-600 text-white border-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.5)]' : 'bg-zinc-900 border-zinc-700 text-zinc-400'}`;
+                btn.textContent = t;
+                btn.onclick = () => { if(isActive) emTags = emTags.filter(x => x !== t); else emTags.push(t); renderEditMangaBadges(); };
+                tCont.appendChild(btn);
+            });
+        }
+
+        window.submitMangaData = async function(e) {
+            e.preventDefault(); if (!window.isAdmin || !dbRef) return;
+            const btn = document.getElementById('btn-submit-manga'); btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>Сохранение...';
+            
+            const rawTranslators = document.getElementById('in-em-translators').value.split('\n').map(s=>s.trim()).filter(s=>s.length>0);
+            const translators = rawTranslators.map(line => {
+                const parts = line.split('|').map(p=>p.trim());
+                return { name: parts[0]||'Без имени', followers: parts[1]||'', avatar: parts[2]||'' };
+            });
+
+            const data = {
+                title: document.getElementById('in-em-title').value.trim(),
+                cover: document.getElementById('in-em-cover').value.trim(),
+                desc: document.getElementById('in-em-desc').value.trim(),
+                type: document.getElementById('in-em-type').value,
+                year: document.getElementById('in-em-year').value,
+                status: document.getElementById('in-em-status').value,
+                ageRating: document.getElementById('in-em-age').value,
+                genres: emGenres, tags: emTags, translators: translators,
+                additionalData: {
+                    translationStatus: document.getElementById('in-em-d-trans').value.trim(),
+                    country: document.getElementById('in-em-d-country').value.trim(),
+                    volumes: document.getElementById('in-em-d-volumes').value.trim(),
+                    format: document.getElementById('in-em-d-format').value.trim(),
+                    author: document.getElementById('in-em-d-author').value.trim(),
+                    publisher: document.getElementById('in-em-d-pub').value.trim()
+                },
+                updatedAt: Date.now()
+            };
+
+            try { 
+                if (emMode === 'add') {
+                    data.createdAt = Date.now();
+                    data.views = 0;
+                    await addDoc(collection(dbRef, 'mangas'), data);
+                    showToast('Тайтл добавлен!', 'fa-check'); 
+                } else {
+                    await updateDoc(doc(dbRef, 'mangas', currentMangaId), data);
+                    showToast('Информация обновлена!', 'fa-check'); 
+                }
+                window.hideModal('modal-edit-manga'); 
+            } catch (err) { showToast('Ошибка сохранения', 'fa-circle-xmark'); }
+            btn.disabled = false; btn.innerHTML = 'Сохранить';
+        }
+
+
+        // ================= ДЕТАЛЬНАЯ СТРАНИЦА =================
+
+        window.openMangaDetails = function(id) { 
+            currentMangaId = id; 
+            hideAllViews(); document.getElementById('view-details').classList.remove('hidden'); document.body.classList.remove('no-scroll'); window.scrollTo({ top: 0, behavior: 'instant' }); 
+            window.switchDetTab('overview'); 
+            renderDetails(id); 
+        }
+
+        window.switchDetTab = function(tab) {
+            ['overview', 'chapters', 'comments'].forEach(t => {
+                document.getElementById(`det-tab-${t}`).classList.add('hidden'); document.getElementById(`det-tab-${t}`).classList.remove('block');
+                document.getElementById(`dtab-${t}`).classList.remove('border-primary-500', 'text-white');
+                document.getElementById(`dtab-${t}`).classList.add('border-transparent', 'text-zinc-500');
+            });
+            document.getElementById(`det-tab-${tab}`).classList.remove('hidden'); document.getElementById(`det-tab-${tab}`).classList.add('block');
+            document.getElementById(`dtab-${tab}`).classList.add('border-primary-500', 'text-white');
+            document.getElementById(`dtab-${tab}`).classList.remove('border-transparent', 'text-zinc-500');
+        }
+
+        window.toggleDesc = function() {
+            const el = document.getElementById('det-desc'); const btn = document.getElementById('btn-desc-toggle');
+            if (el.classList.contains('desc-collapsed')) { el.classList.remove('desc-collapsed'); btn.textContent = 'Скрыть'; } 
+            else { el.classList.add('desc-collapsed'); btn.textContent = 'Показать полностью...'; }
+        }
+
+        window.toggleVolume = function(volId, iconId) {
+            const container = document.getElementById(volId);
+            const icon = document.getElementById(iconId);
+            if(container.classList.contains('hidden')) {
+                container.classList.remove('hidden');
+                icon.classList.add('rotate-180');
+            } else {
+                container.classList.add('hidden');
+                icon.classList.remove('rotate-180');
+            }
         }
 
         function renderDetails(id) {
             const manga = dbMangas.find(m => m.id === id); if(!manga) return;
-            document.getElementById('det-title').textContent = manga.title;
-            document.getElementById('det-desc').textContent = manga.desc || 'Описание отсутствует.';
-            document.getElementById('det-cover').src = manga.cover;
 
-            const icon = document.getElementById('fav-icon');
-            if (favoriteIds.includes(manga.id)) { icon.className = 'fa-solid fa-star text-yellow-400'; } 
-            else { icon.className = 'fa-regular fa-star text-zinc-300'; }
-
-            // Отрисовка бейджиков жанров и тегов
-            const badgesCont = document.getElementById('det-badges');
-            badgesCont.innerHTML = '';
+            // СИСТЕМА РЕАЛЬНЫХ ПРОСМОТРОВ
+            if (!window.sessionViewed) window.sessionViewed = [];
+            if (!window.sessionViewed.includes(id) && dbRef) {
+                window.sessionViewed.push(id);
+                const currentViews = manga.views || 0;
+                updateDoc(doc(dbRef, 'mangas', id), { views: currentViews + 1 }).catch(()=>{});
+                document.getElementById('manga-views').textContent = currentViews + 1;
+            } else {
+                document.getElementById('manga-views').textContent = manga.views || 0;
+            }
             
-            const mGenres = manga.genres || [];
-            mGenres.forEach(g => {
-                const b = document.createElement('span');
-                b.className = 'bg-primary-900/40 text-primary-400 border border-primary-500/30 px-3 py-1 rounded-lg text-xs font-bold cursor-pointer hover:bg-primary-600 hover:text-white smooth-transition';
-                b.textContent = g;
-                b.onclick = () => window.filterBy('genre', g);
-                badgesCont.appendChild(b);
-            });
+            document.getElementById('det-title').textContent = manga.title; document.getElementById('det-cover').src = manga.cover;
+            document.getElementById('det-meta-type').textContent = manga.type || 'Манхва';
+            document.getElementById('det-meta-year').textContent = manga.year || '—';
+            document.getElementById('det-meta-status').textContent = manga.status || '—';
+            document.getElementById('det-meta-age').textContent = manga.ageRating || 'Нет';
+            
+            const btnFavBig = document.getElementById('btn-fav-big'); const iconFav = document.getElementById('fav-icon');
+            if (favoriteIds.includes(manga.id)) { 
+                iconFav.className = 'fa-solid fa-star text-yellow-400'; 
+                btnFavBig.innerHTML = '<i class="fa-solid fa-bookmark text-white"></i> В списке';
+                btnFavBig.classList.add('bg-primary-600', 'border-primary-500'); btnFavBig.classList.remove('bg-zinc-800/80', 'border-zinc-700');
+            } else { 
+                iconFav.className = 'fa-regular fa-star text-zinc-300'; 
+                btnFavBig.innerHTML = '<i class="fa-solid fa-bookmark text-zinc-400"></i> В список';
+                btnFavBig.classList.remove('bg-primary-600', 'border-primary-500'); btnFavBig.classList.add('bg-zinc-800/80', 'border-zinc-700');
+            }
 
-            const mTags = manga.tags || [];
-            mTags.forEach(t => {
-                const b = document.createElement('span');
-                b.className = 'bg-blue-900/40 text-blue-400 border border-blue-500/30 px-3 py-1 rounded-lg text-xs font-bold cursor-pointer hover:bg-blue-600 hover:text-white smooth-transition';
-                b.textContent = '#' + t;
-                b.onclick = () => window.filterBy('tag', t);
-                badgesCont.appendChild(b);
-            });
+            // РЕЙТИНГ
+            const mRatings = dbRatings.filter(r => r.mangaId === id);
+            const avgScore = mRatings.length > 0 ? (mRatings.reduce((sum, r) => sum + r.score, 0) / mRatings.length).toFixed(1) : '0.0';
+            document.getElementById('det-avg-score').textContent = avgScore;
+            document.getElementById('det-rating-count').textContent = `(${mRatings.length} оценок)`;
 
-            const cList = document.getElementById('det-chapters'); cList.innerHTML = '';
-            const mChaps = dbChapters.filter(c => c.mangaId === id);
+            const myRating = dbRatings.find(r => r.mangaId === id && r.userId === user?.uid);
+            const myScore = myRating ? myRating.score : 0;
+            const starsContainer = document.getElementById('user-rating-stars'); starsContainer.innerHTML = '';
+            for(let i = 1; i <= 10; i++) {
+                const star = document.createElement('i');
+                star.className = `fa-star text-xl sm:text-2xl cursor-pointer smooth-transition hover:scale-125 ${i <= myScore ? 'fa-solid text-yellow-400' : 'fa-regular text-zinc-600 hover:text-yellow-400/50'}`;
+                star.onclick = () => window.setRating(i);
+                starsContainer.appendChild(star);
+            }
+
+            // ЖАНРЫ
+            const badgesCont = document.getElementById('det-badges'); badgesCont.innerHTML = '';
+            (manga.genres || []).forEach(g => { const b = document.createElement('span'); b.className = 'bg-primary-900/40 text-primary-400 border border-primary-500/30 px-3 py-1 rounded-lg text-xs font-bold cursor-pointer hover:bg-primary-600 hover:text-white smooth-transition'; b.textContent = g; b.onclick = () => window.filterBy('genre', g); badgesCont.appendChild(b); });
+            (manga.tags || []).forEach(t => { const b = document.createElement('span'); b.className = 'bg-blue-900/40 text-blue-400 border border-blue-500/30 px-3 py-1 rounded-lg text-xs font-bold cursor-pointer hover:bg-blue-600 hover:text-white smooth-transition'; b.textContent = '#' + t; b.onclick = () => window.filterBy('tag', t); badgesCont.appendChild(b); });
+            if (!manga.genres?.length && !manga.tags?.length) { document.getElementById('badges-section').classList.add('hidden'); } else { document.getElementById('badges-section').classList.remove('hidden'); }
+
+            document.getElementById('det-desc').textContent = manga.desc || 'Описание отсутствует.';
+            document.getElementById('det-desc').classList.add('desc-collapsed'); document.getElementById('btn-desc-toggle').textContent = 'Показать полностью...';
+
+            // ПЕРЕВОДЧИКИ
+            const transSec = document.getElementById('translators-section'); const transList = document.getElementById('det-translators-list'); transList.innerHTML = '';
+            if (manga.translators && manga.translators.length > 0) {
+                transSec.classList.remove('hidden');
+                manga.translators.forEach(tr => {
+                    const avatar = tr.avatar ? `<img src="${tr.avatar}" class="w-10 h-10 rounded-full object-cover shadow">` : `<div class="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center text-zinc-400"><i class="fa-solid fa-language"></i></div>`;
+                    transList.innerHTML += `
+                        <div class="flex items-center gap-4 bg-zinc-900/50 p-3 rounded-xl border border-zinc-800/80">
+                            ${avatar}
+                            <div class="flex-1">
+                                <div class="text-zinc-200 font-bold text-sm">${tr.name}</div>
+                                <div class="text-zinc-500 font-bold text-xs">${tr.followers}</div>
+                            </div>
+                            <button class="bg-zinc-800 text-zinc-400 hover:text-white hover:bg-primary-600 w-8 h-8 rounded-lg flex items-center justify-center smooth-transition shadow"><i class="fa-solid fa-user-plus text-xs"></i></button>
+                        </div>
+                    `;
+                });
+            } else { transSec.classList.add('hidden'); }
+
+            // ДОП. ДАННЫЕ
+            const table = document.getElementById('det-info-table'); table.innerHTML = ''; const ad = manga.additionalData || {};
+            const adMap = [
+                { label: 'Перевод', val: ad.translationStatus }, { label: 'Страна', val: ad.country },
+                { label: 'Томов', val: ad.volumes }, { label: 'Формат выпуска', val: ad.format },
+                { label: 'Автор', val: ad.author }, { label: 'Издательство', val: ad.publisher }
+            ];
+            let hasAd = false;
+            adMap.forEach(item => {
+                if(item.val) { hasAd = true; table.innerHTML += `<tr class="hover:bg-zinc-800/30 smooth-transition"><td class="py-3 px-4 text-zinc-500 font-bold w-1/2">${item.label}</td><td class="py-3 px-4 text-zinc-300 font-semibold">${item.val}</td></tr>`; }
+            });
+            if(hasAd) document.getElementById('additional-data-section').classList.remove('hidden'); else document.getElementById('additional-data-section').classList.add('hidden');
+
+            // ГЛАВЫ И ТОМА
+            const mChaps = dbChapters.filter(c => c.mangaId === id); document.getElementById('det-chapters-badge').textContent = mChaps.length;
+            const cList = document.getElementById('det-chapters'); cList.innerHTML = ''; 
             
             if (mChaps.length === 0) {
-                cList.innerHTML = '<div class="text-zinc-500 text-sm font-bold py-8 text-center border-2 border-dashed border-zinc-800/80 rounded-2xl bg-zinc-950/30">Главы еще не вышли</div>';
+                cList.innerHTML = '<div class="text-zinc-500 text-sm font-bold py-8 text-center bg-zinc-950/30 rounded-2xl border-2 border-dashed border-zinc-800">Главы еще не вышли</div>';
             } else {
-                mChaps.forEach((chap) => {
-                    const row = document.createElement('div');
-                    row.className = 'flex items-center justify-between bg-zinc-950/60 hover:bg-zinc-800 p-3 sm:p-4 rounded-2xl border border-zinc-800/80 smooth-transition group cursor-pointer';
-                    row.onclick = (e) => { if(!e.target.closest('button.text-zinc-600')) window.startReading(chap.id); };
-                    
-                    let delBtn = window.isAdmin ? `<button onclick="window.deleteChap('${chap.id}')" class="text-zinc-600 hover:text-red-400 p-2 smooth-transition active:scale-90"><i class="fa-solid fa-trash"></i></button>` : '';
-                    row.innerHTML = `
-                        <span class="font-black text-sm text-zinc-200 flex-1 truncate group-hover:text-primary-400 smooth-transition group-hover:translate-x-1">${chap.title}</span>
-                        <div class="flex items-center gap-1 sm:gap-2 pl-2">${delBtn}<button class="bg-primary-600/10 text-primary-500 group-hover:bg-primary-600 group-hover:text-white group-hover:shadow-[0_0_15px_rgba(124,58,237,0.4)] text-xs px-4 py-2 rounded-xl font-black smooth-transition active:scale-95">Читать</button></div>`;
-                    cList.appendChild(row);
+                // Группируем по томам
+                const grouped = {};
+                mChaps.forEach(chap => {
+                    const volName = chap.volume || 'Главы';
+                    if (!grouped[volName]) grouped[volName] = [];
+                    grouped[volName].push(chap);
                 });
+
+                let vIndex = 0;
+                for (const vol in grouped) {
+                    const volId = 'vol-chaps-' + vIndex;
+                    const iconId = 'vol-icon-' + vIndex;
+                    
+                    const vHeader = document.createElement('div');
+                    vHeader.className = 'bg-zinc-900 border border-zinc-800 p-4 rounded-xl flex items-center justify-between cursor-pointer hover:bg-zinc-800 smooth-transition shadow-sm select-none';
+                    vHeader.onclick = () => window.toggleVolume(volId, iconId);
+                    vHeader.innerHTML = `
+                        <div class="font-black text-white text-lg drop-shadow-md">
+                            ${vol} <span class="text-zinc-500 text-sm ml-2 font-bold">(${grouped[vol].length})</span>
+                        </div>
+                        <i id="${iconId}" class="fa-solid fa-chevron-down text-zinc-400 smooth-transition"></i>
+                    `;
+                    cList.appendChild(vHeader);
+
+                    const vContainer = document.createElement('div');
+                    vContainer.id = volId;
+                    vContainer.className = 'flex flex-col gap-2 mt-2 mb-4';
+                    
+                    if (vIndex !== 0) {
+                        vContainer.classList.add('hidden');
+                    } else {
+                        setTimeout(() => document.getElementById(iconId).classList.add('rotate-180'), 10);
+                    }
+
+                    grouped[vol].forEach((chap) => {
+                        const row = document.createElement('div'); row.className = 'flex items-center justify-between bg-zinc-950/60 hover:bg-zinc-800 p-3 sm:p-4 rounded-2xl border border-zinc-800/80 smooth-transition group cursor-pointer ml-2 sm:ml-4'; 
+                        row.onclick = () => window.startReading(chap.id);
+                        let delBtnHtml = window.isAdmin ? `<button type="button" onclick="event.stopPropagation(); window.deleteChap('${chap.id}')" class="text-zinc-500 hover:text-red-400 bg-zinc-900 hover:bg-red-500/10 p-2.5 rounded-xl smooth-transition active:scale-90" title="Удалить"><i class="fa-solid fa-trash"></i></button>` : '';
+                        const d = new Date(chap.createdAt); const dateStr = `${d.getDate()}.${d.getMonth()+1}.${d.getFullYear()}`;
+                        row.innerHTML = `
+                            <div class="flex flex-col flex-1 truncate pr-2">
+                                <span class="font-black text-sm text-zinc-200 truncate group-hover:text-primary-400 smooth-transition group-hover:translate-x-1">${chap.title}</span>
+                                <span class="text-[10px] font-bold text-zinc-500 mt-1 uppercase tracking-wider">${dateStr}</span>
+                            </div>
+                            <div class="flex items-center gap-2 pl-2">
+                                ${delBtnHtml}
+                                <button type="button" class="bg-primary-600/10 text-primary-500 group-hover:bg-primary-600 group-hover:text-white group-hover:shadow-[0_0_15px_rgba(124,58,237,0.4)] text-xs px-4 py-2.5 rounded-xl font-black smooth-transition active:scale-95">Читать</button>
+                            </div>`;
+                        vContainer.appendChild(row);
+                    });
+
+                    cList.appendChild(vContainer);
+                    vIndex++;
+                }
             }
+
+            window.renderMangaComments();
         }
 
-        // --- ЧИТАЛКА (ВЕРТИКАЛЬНАЯ) ---
+        window.readFirstOrLastChapter = function() {
+            if(!currentMangaId) return; const mChaps = dbChapters.filter(c => c.mangaId === currentMangaId);
+            if(mChaps.length === 0) { showToast('Главы пока не загружены', 'fa-circle-info'); return; }
+            window.startReading(mChaps[mChaps.length-1].id);
+        }
+
+        window.setRating = async function(score) {
+            if (!user) { showToast('Синхронизация...', 'fa-spinner fa-spin'); return; }
+            if (!currentMangaId) return;
+            const existing = dbRatings.find(r => r.mangaId === currentMangaId && r.userId === user.uid);
+            try {
+                if (existing) {
+                    await updateDoc(doc(dbRef, 'ratings', existing.id), { score: score, updatedAt: Date.now() });
+                    showToast(`Оценка изменена! ⭐`, 'fa-star');
+                } else {
+                    await addDoc(collection(dbRef, 'ratings'), { mangaId: currentMangaId, userId: user.uid, score: score, createdAt: Date.now() });
+                    showToast(`Оценка сохранена! ⭐`, 'fa-star');
+                }
+            } catch (e) { showToast('Ошибка сохранения', 'fa-circle-xmark'); }
+        }
+
+        // ================= КОММЕНТАРИИ ДЛЯ ТАЙТЛА =================
+        window.renderMangaComments = function() {
+            if(!currentMangaId) return;
+            const list = document.getElementById('manga-comments-list'); list.innerHTML = '';
+            const tComments = dbComments.filter(c => c.mangaId === currentMangaId && !c.chapterId);
+            document.getElementById('det-comments-badge').textContent = tComments.length;
+            
+            if (tComments.length === 0) {
+                list.innerHTML = '<div class="text-zinc-500 text-sm font-bold py-8 text-center bg-zinc-950/30 rounded-2xl border border-zinc-800/50">Пока нет комментариев.</div>'; return;
+            }
+
+            tComments.forEach(c => {
+                const isMine = user && c.userId === user.uid; const canDelete = isMine || window.isAdmin;
+                const d = new Date(c.createdAt); const dateStr = d.toLocaleDateString('ru-RU') + ' ' + d.getHours().toString().padStart(2, '0') + ':' + d.getMinutes().toString().padStart(2, '0');
+                const el = document.createElement('div'); el.className = 'bg-zinc-900/40 p-4 rounded-2xl border border-zinc-800/50 relative group';
+                let delBtn = canDelete ? `<button onclick="window.deleteComment('${c.id}')" class="absolute top-3 right-3 text-zinc-500 hover:text-red-400 bg-zinc-950/50 hover:bg-red-500/10 w-8 h-8 rounded-lg flex items-center justify-center smooth-transition active:scale-90" title="Удалить"><i class="fa-solid fa-trash text-xs"></i></button>` : '';
+                const initial = c.authorName ? c.authorName.charAt(0).toUpperCase() : 'U';
+
+                el.innerHTML = `
+                    ${delBtn}
+                    <div class="flex items-center gap-3 mb-2 pr-10">
+                        <div class="w-9 h-9 rounded-full bg-gradient-to-br from-primary-500 to-purple-600 flex items-center justify-center text-white font-black text-sm shadow-md">${initial}</div>
+                        <div>
+                            <div class="text-zinc-200 font-bold text-sm leading-none flex items-center gap-2">
+                                ${c.authorName || 'Аноним'} ${c.isAdmin ? '<i class="fa-solid fa-crown text-primary-500 text-[10px]" title="Автор"></i>' : ''}
+                            </div>
+                            <div class="text-zinc-500 text-[10px] mt-1 font-bold">${dateStr}</div>
+                        </div>
+                    </div>
+                    <p class="text-zinc-300 text-sm whitespace-pre-wrap break-words mt-2 leading-relaxed">${c.text}</p>
+                `;
+                list.appendChild(el);
+            });
+        }
+
+        window.submitMangaComment = async function() {
+            if (!user || !dbRef || !currentMangaId) return;
+            const nameInput = document.getElementById('in-det-comment-name'); const textInput = document.getElementById('in-det-comment-text');
+            const name = nameInput.value.trim() || 'Аноним'; const text = textInput.value.trim();
+            if (!text) { showToast('Введите текст', 'fa-triangle-exclamation'); return; }
+            localStorage.setItem('MW_USERNAME', name);
+            try {
+                await addDoc(collection(dbRef, 'comments'), { mangaId: currentMangaId, userId: user.uid, authorName: name, text: text, isAdmin: window.isAdmin, createdAt: Date.now() });
+                textInput.value = ''; showToast('Комментарий добавлен!', 'fa-comment');
+            } catch (err) { showToast('Ошибка', 'fa-circle-xmark'); }
+        }
+
+        // ================= КОММЕНТАРИИ ДЛЯ ГЛАВЫ И ЧИТАЛКА =================
+        window.renderComments = function() {
+            const list = document.getElementById('comments-list'); list.innerHTML = '';
+            const chapComments = dbComments.filter(c => c.chapterId === currentChapId);
+            if (chapComments.length === 0) { list.innerHTML = '<div class="text-zinc-500 text-sm font-bold py-8 text-center bg-zinc-950/30 rounded-2xl border border-zinc-800/50">Пока нет комментариев.</div>'; return; }
+
+            chapComments.forEach(c => {
+                const isMine = user && c.userId === user.uid; const canDelete = isMine || window.isAdmin;
+                const d = new Date(c.createdAt); const dateStr = d.toLocaleDateString('ru-RU') + ' ' + d.getHours().toString().padStart(2, '0') + ':' + d.getMinutes().toString().padStart(2, '0');
+                const el = document.createElement('div'); el.className = 'bg-zinc-900/40 p-4 rounded-2xl border border-zinc-800/50 relative group';
+                let delBtn = canDelete ? `<button onclick="window.deleteComment('${c.id}')" class="absolute top-3 right-3 text-zinc-500 hover:text-red-400 bg-zinc-950/50 hover:bg-red-500/10 w-8 h-8 rounded-lg flex items-center justify-center smooth-transition active:scale-90" title="Удалить"><i class="fa-solid fa-trash text-xs"></i></button>` : '';
+                const initial = c.authorName ? c.authorName.charAt(0).toUpperCase() : 'U';
+
+                el.innerHTML = `
+                    ${delBtn}
+                    <div class="flex items-center gap-3 mb-2 pr-10">
+                        <div class="w-9 h-9 rounded-full bg-gradient-to-br from-primary-500 to-purple-600 flex items-center justify-center text-white font-black text-sm shadow-md">${initial}</div>
+                        <div>
+                            <div class="text-zinc-200 font-bold text-sm leading-none flex items-center gap-2">
+                                ${c.authorName || 'Аноним'} ${c.isAdmin ? '<i class="fa-solid fa-crown text-primary-500 text-[10px]" title="Автор"></i>' : ''}
+                            </div>
+                            <div class="text-zinc-500 text-[10px] mt-1 font-bold">${dateStr}</div>
+                        </div>
+                    </div>
+                    <p class="text-zinc-300 text-sm whitespace-pre-wrap break-words mt-2 leading-relaxed">${c.text}</p>
+                `;
+                list.appendChild(el);
+            });
+        };
+
+        window.submitComment = async function() {
+            if (!user || !dbRef || !currentChapId) return;
+            const nameInput = document.getElementById('in-comment-name'); const textInput = document.getElementById('in-comment-text');
+            const name = nameInput.value.trim() || 'Аноним'; const text = textInput.value.trim();
+            if (!text) return; localStorage.setItem('MW_USERNAME', name);
+            try {
+                await addDoc(collection(dbRef, 'comments'), { chapterId: currentChapId, userId: user.uid, authorName: name, text: text, isAdmin: window.isAdmin, createdAt: Date.now() });
+                textInput.value = ''; showToast('Отправлено!', 'fa-comment');
+            } catch (err) { showToast('Ошибка', 'fa-circle-xmark'); }
+        };
+
+        window.deleteComment = function(id) { window.customConfirm('Удалить комментарий?', async () => { try { await deleteDoc(doc(dbRef, 'comments', id)); } catch (e) {} }); };
+
         window.startReading = function(chapId) {
-            const mChaps = dbChapters.filter(c => c.mangaId === currentMangaId);
-            const idx = mChaps.findIndex(c => c.id === chapId);
-            if (idx === -1) return;
-            currentChapIdx = idx; const chap = mChaps[idx]; const manga = dbMangas.find(m => m.id === currentMangaId);
+            const mChaps = dbChapters.filter(c => c.mangaId === currentMangaId); const idx = mChaps.findIndex(c => c.id === chapId); if (idx === -1) return;
+            currentChapId = chapId; currentChapIdx = idx; const chap = mChaps[idx]; const manga = dbMangas.find(m => m.id === currentMangaId);
             document.getElementById('read-manga-title').textContent = manga.title; document.getElementById('read-chapter-title').textContent = chap.title;
             document.getElementById('btn-next-chap').disabled = (idx === 0); document.getElementById('btn-prev-chap').disabled = (idx === mChaps.length - 1);
-
+            
             const pagesContainer = document.getElementById('reader-pages'); pagesContainer.innerHTML = '';
-            chap.images.forEach((url) => {
-                if(!url.trim()) return;
-                const img = document.createElement('img'); img.src = url.trim();
-                img.className = 'w-full h-auto block m-0 p-0 pointer-events-none bg-[#09090b] min-h-[100px] object-cover';
-                img.onerror = () => { img.style.display = 'none'; }; pagesContainer.appendChild(img);
-            });
+            chap.images.forEach((url) => { if(!url.trim()) return; const img = document.createElement('img'); img.src = url.trim(); img.className = 'w-full h-auto block m-0 p-0 pointer-events-none bg-[#09090b] min-h-[100px] object-cover'; img.onerror = () => { img.style.display = 'none'; }; pagesContainer.appendChild(img); });
             if(chap.images.length === 0) pagesContainer.innerHTML = '<div class="text-zinc-500 p-10 font-bold text-center">В главе нет страниц</div>';
-
-            isUiHidden = false;
-            document.getElementById('reader-topbar').classList.remove('reader-ui-hidden'); document.getElementById('reader-bottombar').classList.remove('reader-ui-hidden-bottom');
-            hideAllViews(); document.getElementById('view-reader').classList.remove('hidden');
-            document.body.classList.add('no-scroll'); document.getElementById('view-reader').scrollTo({ top: 0, behavior: 'instant' });
+            
+            document.getElementById('in-comment-name').value = localStorage.getItem('MW_USERNAME') || ''; window.renderComments();
+            isUiHidden = false; document.getElementById('reader-topbar').classList.remove('reader-ui-hidden'); document.getElementById('reader-bottombar').classList.remove('reader-ui-hidden-bottom');
+            hideAllViews(); document.getElementById('view-reader').classList.remove('hidden'); document.body.classList.add('no-scroll'); document.getElementById('view-reader').scrollTo({ top: 0, behavior: 'instant' });
         }
 
-        window.changeChapter = function(dir) {
-            const newIdx = currentChapIdx + dir; const mChaps = dbChapters.filter(c => c.mangaId === currentMangaId);
-            if (newIdx >= 0 && newIdx < mChaps.length) window.startReading(mChaps[newIdx].id);
-        }
+        window.changeChapter = function(dir) { const newIdx = currentChapIdx + dir; const mChaps = dbChapters.filter(c => c.mangaId === currentMangaId); if (newIdx >= 0 && newIdx < mChaps.length) window.startReading(mChaps[newIdx].id); }
+        window.closeReader = function() { document.getElementById('view-reader').classList.add('hidden'); document.body.classList.remove('no-scroll'); if(currentMangaId) { window.openMangaDetails(currentMangaId); } else { window.goHome(); } }
+        window.toggleReaderUI = function() { isUiHidden = !isUiHidden; const top = document.getElementById('reader-topbar'); const bottom = document.getElementById('reader-bottombar'); if (isUiHidden) { top.classList.add('reader-ui-hidden'); bottom.classList.add('reader-ui-hidden-bottom'); } else { top.classList.remove('reader-ui-hidden'); bottom.classList.remove('reader-ui-hidden-bottom'); } }
 
-        window.closeReader = function() { window.openMangaDetails(currentMangaId); }
-        window.toggleReaderUI = function() {
-            isUiHidden = !isUiHidden;
-            const top = document.getElementById('reader-topbar'); const bottom = document.getElementById('reader-bottombar');
-            if (isUiHidden) { top.classList.add('reader-ui-hidden'); bottom.classList.add('reader-ui-hidden-bottom'); } 
-            else { top.classList.remove('reader-ui-hidden'); bottom.classList.remove('reader-ui-hidden-bottom'); }
+        // ================= ДОБАВЛЕНИЕ ГЛАВЫ (С ТОМАМИ) =================
+        window.openAddChapterModal = function() { 
+            document.getElementById('in-chap-title').value = ''; 
+            document.getElementById('in-chap-volume').value = ''; 
+            document.getElementById('in-chap-urls').value = ''; 
+            window.showModal('modal-add-chapter'); 
         }
-
-        // --- СОЗДАНИЕ В БАЗЕ ---
-        window.submitManga = async function(e) {
-            e.preventDefault(); if (!window.isAdmin || !dbRef) return;
-            const btn = document.getElementById('btn-submit-manga'); btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>Публикация...';
-            try {
-                await addDoc(collection(dbRef, 'artifacts', appIdStr, 'public', 'data', 'mangas'), {
-                    title: document.getElementById('in-title').value.trim(), 
-                    cover: document.getElementById('in-cover').value.trim(), 
-                    desc: document.getElementById('in-desc').value.trim(), 
-                    genres: selectedGenresForm, // Сохраняем жанры
-                    tags: selectedTagsForm,     // Сохраняем теги
-                    createdAt: Date.now()
-                });
-                showToast('Манга успешно опубликована!', 'fa-check'); document.getElementById('form-add-manga').reset(); window.hideModal('modal-add-manga');
-            } catch (err) { showToast('Ошибка. Возможно нет прав в базе.', 'fa-circle-xmark'); }
-            btn.disabled = false; btn.innerHTML = 'Опубликовать в каталог';
-        }
-
+        
         window.submitChapter = async function(e) {
-            e.preventDefault(); if (!window.isAdmin || !dbRef) return;
+            e.preventDefault(); if (!window.isAdmin || !dbRef || !currentMangaId) return;
             const btn = document.getElementById('btn-submit-chapter'); btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>Загрузка...';
+            
             const urls = document.getElementById('in-chap-urls').value.split('\n').map(u=>u.trim()).filter(u=>u.length>0);
-            try {
-                await addDoc(collection(dbRef, 'artifacts', appIdStr, 'public', 'data', 'chapters'), {
-                    mangaId: currentMangaId, title: document.getElementById('in-chap-title').value.trim(), images: urls, createdAt: Date.now()
-                });
-                showToast('Глава добавлена!', 'fa-check'); document.getElementById('form-add-chapter').reset(); window.hideModal('modal-add-chapter');
+            const volumeStr = document.getElementById('in-chap-volume').value.trim();
+
+            try { 
+                await addDoc(collection(dbRef, 'chapters'), { 
+                    mangaId: currentMangaId, 
+                    title: document.getElementById('in-chap-title').value.trim(), 
+                    volume: volumeStr,
+                    images: urls, 
+                    createdAt: Date.now() 
+                }); 
+                showToast('Глава добавлена!', 'fa-check'); window.hideModal('modal-add-chapter'); 
             } catch (err) { showToast('Ошибка загрузки', 'fa-circle-xmark'); }
-            btn.disabled = false; btn.innerHTML = 'Загрузить в базу';
+            btn.disabled = false; btn.innerHTML = 'Загрузить в базу данных';
         }
 
-        window.deleteCurrentManga = async function() {
-            if(!window.isAdmin || !confirm('Удалить мангу навсегда?')) return;
-            try { await deleteDoc(doc(dbRef, 'artifacts', appIdStr, 'public', 'data', 'mangas', currentMangaId)); showToast('Тайтл удален', 'fa-trash'); window.goHome(); } catch (e) { showToast('Ошибка удаления', 'fa-circle-xmark'); }
+        // ================= УДАЛЕНИЕ И ПОДТВЕРЖДЕНИЕ =================
+        window.customConfirm = function(message, callback) {
+            const overlay = document.createElement('div'); overlay.className = 'fixed inset-0 bg-black/80 z-[200] flex items-center justify-center p-4 backdrop-blur-sm animate-fade-in';
+            overlay.innerHTML = `<div class="bg-zinc-900 border border-zinc-800 p-6 rounded-[2rem] max-w-xs w-full text-center shadow-2xl animate-slide-up"><div class="w-16 h-16 bg-red-500/10 text-red-500 rounded-2xl flex items-center justify-center mx-auto mb-4 text-3xl shadow-inner"><i class="fa-solid fa-triangle-exclamation"></i></div><p class="text-white font-bold text-lg mb-6">${message}</p><div class="flex flex-col gap-3"><button id="btn-confirm-yes" class="w-full py-3 rounded-xl font-bold bg-red-600 text-white hover:bg-red-500 active:scale-95 smooth-transition">Удалить</button><button id="btn-confirm-no" class="w-full py-3 rounded-xl font-bold bg-zinc-800 text-zinc-300 hover:bg-zinc-700 active:scale-95 smooth-transition">Отмена</button></div></div>`;
+            document.body.appendChild(overlay); document.getElementById('btn-confirm-no').onclick = () => overlay.remove(); document.getElementById('btn-confirm-yes').onclick = () => { overlay.remove(); callback(); };
         }
+        window.deleteCurrentManga = function() { if(!window.isAdmin || !currentMangaId) return; window.customConfirm('Удалить этот тайтл навсегда?', async () => { try { await deleteDoc(doc(dbRef, 'mangas', currentMangaId)); showToast('Тайтл удален', 'fa-trash'); window.goHome(); } catch (e) {} }); }
+        window.deleteChap = function(id) { if(!window.isAdmin || !id) return; window.customConfirm('Удалить главу?', async () => { try { await deleteDoc(doc(dbRef, 'chapters', id)); showToast('Глава удалена', 'fa-trash'); } catch (e) {} }); }
+        window.deleteCurrentReadingChapter = function() { if(!window.isAdmin || !currentChapId) return; window.customConfirm('Удалить эту главу?', async () => { try { await deleteDoc(doc(dbRef, 'chapters', currentChapId)); showToast('Глава удалена', 'fa-trash'); window.closeReader(); } catch (e) {} }); }
 
-        window.deleteChap = async function(id) {
-            if(!window.isAdmin || !confirm('Удалить главу?')) return;
-            try { await deleteDoc(doc(dbRef, 'artifacts', appIdStr, 'public', 'data', 'chapters', id)); showToast('Глава удалена', 'fa-trash'); } catch (e) { showToast('Ошибка удаления', 'fa-circle-xmark'); }
-        }
-
-        // --- УПРАВЛЕНИЕ МОДАЛКАМИ И ЗАКЛАДКАМИ ---
+        // ================= ИЗБРАННОЕ =================
         function loadFavorites() { try { favoriteIds = JSON.parse(localStorage.getItem('MW_FAVS') || '[]'); } catch(e) { favoriteIds = []; } }
         function saveFavorites() { localStorage.setItem('MW_FAVS', JSON.stringify(favoriteIds)); }
-        function checkAdminStatus() {
-            const els = document.querySelectorAll('.admin-only'); els.forEach(el => window.isAdmin ? el.classList.remove('hidden') : el.classList.add('hidden'));
-            const menu = document.getElementById('admin-menu'); const loginBtn = document.getElementById('btn-login-admin');
-            if (window.isAdmin) { menu.classList.remove('hidden'); menu.classList.add('flex'); loginBtn.classList.add('hidden'); } 
-            else { menu.classList.add('hidden'); menu.classList.remove('flex'); loginBtn.classList.remove('hidden'); }
-        }
+        window.toggleFavorite = function() { if (!currentMangaId) return; const idx = favoriteIds.indexOf(currentMangaId); if (idx === -1) { favoriteIds.push(currentMangaId); showToast('Добавлено в Избранное ⭐', 'fa-star'); } else { favoriteIds.splice(idx, 1); showToast('Удалено из Избранного', 'fa-regular fa-star'); } saveFavorites(); renderDetails(currentMangaId); }
+        
+        // ================= АВТОРИЗАЦИЯ =================
+        function checkAdminStatus() { const els = document.querySelectorAll('.admin-only'); els.forEach(el => window.isAdmin ? el.classList.remove('hidden') : el.classList.add('hidden')); const menu = document.getElementById('admin-menu'); const loginBtn = document.getElementById('btn-login-admin'); if (window.isAdmin) { if(menu) { menu.classList.remove('hidden'); menu.classList.add('flex'); } if(loginBtn) loginBtn.classList.add('hidden'); } else { if(menu) { menu.classList.add('hidden'); menu.classList.remove('flex'); } if(loginBtn) loginBtn.classList.remove('hidden'); } }
+        window.loginAdmin = function(e) { e.preventDefault(); if (document.getElementById('in-admin-pass').value === ADMIN_PIN) { window.isAdmin = true; localStorage.setItem('MW_IS_ADMIN', 'true'); checkAdminStatus(); window.hideModal('modal-auth'); showToast('Режим Автора включен', 'fa-unlock-keyhole'); } else { showToast('Неверный ПИН-код', 'fa-triangle-exclamation'); } document.getElementById('in-admin-pass').value = ''; }
+        window.logoutAdmin = function() { window.isAdmin = false; localStorage.setItem('MW_IS_ADMIN', 'false'); checkAdminStatus(); window.toggleDrawer(); showToast('Вы вышли из режима Автора', 'fa-lock'); }
 
         window.showModal = function(id) { const el = document.getElementById(id); el.classList.remove('invisible'); document.body.classList.add('no-scroll'); setTimeout(() => el.classList.add('modal-enter'), 10); }
         window.hideModal = function(id) { const el = document.getElementById(id); el.classList.remove('modal-enter'); document.body.classList.remove('no-scroll'); setTimeout(() => el.classList.add('invisible'), 300); }
-        window.toggleDrawer = function() {
-            const d = document.getElementById('drawer'); const bg = document.getElementById('drawer-backdrop');
-            if (d.classList.contains('drawer-open')) { d.classList.remove('drawer-open'); bg.classList.remove('opacity-100'); document.body.classList.remove('no-scroll'); setTimeout(() => bg.classList.add('invisible', 'opacity-0'), 300); } 
-            else { bg.classList.remove('invisible', 'opacity-0'); bg.classList.add('opacity-100'); d.classList.add('drawer-open'); document.body.classList.add('no-scroll'); }
-        }
-        function showToast(msg, iconClass = 'fa-bell') { 
-            const t = document.getElementById('toast'); document.getElementById('toast-msg').textContent = msg; 
-            document.getElementById('toast-icon').className = `fa-solid ${iconClass} text-lg`;
-            t.classList.remove('-translate-y-10', 'opacity-0'); setTimeout(() => t.classList.add('-translate-y-10', 'opacity-0'), 3000); 
-        }
-
+        window.toggleDrawer = function() { const d = document.getElementById('drawer'); const bg = document.getElementById('drawer-backdrop'); if (d.classList.contains('drawer-open')) { d.classList.remove('drawer-open'); bg.classList.remove('opacity-100'); document.body.classList.remove('no-scroll'); setTimeout(() => bg.classList.add('invisible', 'opacity-0'), 300); } else { bg.classList.remove('invisible', 'opacity-0'); bg.classList.add('opacity-100'); d.classList.add('drawer-open'); document.body.classList.add('no-scroll'); } }
+        function showToast(msg, iconClass = 'fa-bell') { const t = document.getElementById('toast'); document.getElementById('toast-msg').textContent = msg; document.getElementById('toast-icon').className = `fa-solid ${iconClass} text-lg`; t.classList.remove('-translate-y-10', 'opacity-0'); setTimeout(() => t.classList.add('-translate-y-10', 'opacity-0'), 3000); }
         document.addEventListener('DOMContentLoaded', initApp);
     </script>
 </body>
